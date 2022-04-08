@@ -15,7 +15,8 @@ Imports:
   purrr, ggplot2, ggnewscale, 
   RColorBrewer, cowplot, ggpubr,
   png, grid, magick, rsvg, lubridate, 
-  stringr, stringi, googlesheets4, xml2
+  stringr, stringi, googlesheets4, xml2,
+  parallel, fuzzyjoin
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
