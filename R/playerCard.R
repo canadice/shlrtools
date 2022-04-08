@@ -475,7 +475,7 @@ playerData <- function(chosen, leagueData){
 ##--------------------------------------------------------------------------
 ##  Creates a function that outputs a specific player card from a league   -
 ##--------------------------------------------------------------------------
-
+#* @export
 playerCard <- function(chosen, leagueData){
 
   data <- playerData(chosen, leagueData)

@@ -2,7 +2,7 @@
 ##---------------------------------------------------------------
 ##              Scrapes every teams subforum link               -
 ##---------------------------------------------------------------
-
+#* @export
 teamScraper <- function(league){
   baseLink <- "https://simulationhockey.com/"
 
@@ -27,7 +27,7 @@ teamScraper <- function(league){
 ##----------------------------------------------------------------
 ##              Prospect or FA player link scraper               -
 ##----------------------------------------------------------------
-
+#* @export
 prospectsFAScraper <- function(link){
   base_link <- "https://simulationhockey.com/"
 
@@ -43,7 +43,7 @@ prospectsFAScraper <- function(link){
 ##---------------------------------------------------------------
 ##                  Player scraper from teams                   -
 ##---------------------------------------------------------------
-
+#* @export
 playerLinkScraper <- function(team){
   baseLink <- "https://simulationhockey.com/"
 
@@ -111,7 +111,7 @@ playerLinkScraper <- function(team){
 ##----------------------------------------------------------------
 ##              Scrapes Prospects from each SHL team             -
 ##----------------------------------------------------------------
-
+#* @export
 draftedProspectScraper <- function(link){
   ### Reads the information
   topic <- xml2::read_html(link)
@@ -153,7 +153,7 @@ draftedProspectScraper <- function(link){
 ##----------------------------------------------------------------
 ##                  Scrapes all player page data                 -
 ##----------------------------------------------------------------
-
+#* @export
 playerScraper <-
   function(player){
     ### Takes the player link scraped from the team pages
@@ -748,7 +748,7 @@ playerScraper <-
 ##---------------------------------------------------------------
 ##                    Scrapes all user data                     -
 ##---------------------------------------------------------------
-
+#* @export
 userScraper <- function(link){
   base_link <- "https://simulationhockey.com/"
 

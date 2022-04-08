@@ -1,7 +1,7 @@
 ##---------------------------------------------------------------
 ##          Function that reads from API based on url           -
 ##---------------------------------------------------------------
-
+#* @export
 readAPI <- function(url, ...){
   temp <-
     url %>%
@@ -19,7 +19,7 @@ readAPI <- function(url, ...){
 ##---------------------------------------------------------------
 ##        Function that loads player ratings (attributes)       -
 ##---------------------------------------------------------------
-
+#* @export
 playerLoader <- function(leagueID, season = NULL){
   players <-
     readAPI(
@@ -135,7 +135,7 @@ playerLoader <- function(leagueID, season = NULL){
 ##---------------------------------------------------------------
 ##            Function that loads player statistics             -
 ##---------------------------------------------------------------
-
+#* @export
 indStatsLoader <- function(leagueID, season = NULL, type = NULL){
   players <-
     readAPI(
@@ -175,7 +175,7 @@ indStatsLoader <- function(leagueID, season = NULL, type = NULL){
 ##---------------------------------------------------------------
 ##      Function that loads team statistics and information     -
 ##---------------------------------------------------------------
-
+#* @export
 teamLoader <-  function(leagueID, season = NULL){
   teams <-
     readAPI(
@@ -189,7 +189,7 @@ teamLoader <-  function(leagueID, season = NULL){
 ##----------------------------------------------------------------
 ##                  Function that loads schedule                 -
 ##----------------------------------------------------------------
-
+#* @export
 gamesLoader <- function(leagueID, season = NULL, type = NULL){
   schedule <-
     readAPI(
@@ -213,7 +213,7 @@ playoffLoader <- function(leagueID, season = NULL){
 ##---------------------------------------------------------------
 ##                Function that loads standings                 -
 ##---------------------------------------------------------------
-
+#* @export
 standingsLoader <- function(leagueID, season = NULL){
   standings <-
     readAPI(

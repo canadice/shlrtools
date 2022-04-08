@@ -2,7 +2,7 @@
 ##################################################################
 ##                 Loads svg files of the logos                 ##
 ##################################################################
-
+#* @export
 addTeamLogo <- function(teamInfo){
   raw <- "https://raw.githubusercontent.com/canadice/shl/main/"
 
