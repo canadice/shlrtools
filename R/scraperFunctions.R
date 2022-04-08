@@ -3,7 +3,7 @@
 ##              Scrapes every teams subforum link               -
 ##---------------------------------------------------------------
 
-team_scraper <- function(league){
+teamScraper <- function(league){
   baseLink <- "https://simulationhockey.com/"
 
   ## Reads the information from the league page
