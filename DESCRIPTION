@@ -5,7 +5,7 @@ Authors@R: person("Canadice", "SHL", email = "canadice.shl@gmail.com", role = c(
 Description: Package provides functions and tools for the Simulation Hockey League. The package has functions for 
   scraping the forum website, analyzing saved games from FHM6, 
   visualization of data from the SHL Index and more.
-License: use_mit_license()
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
@@ -13,10 +13,10 @@ Imports:
   httr, jsonlite, rvest, RCurl, dplyr, 
   plyr, tidyr, janitor, tibble,
   purrr, ggplot2, ggnewscale, 
-  RColorBrewer, cowplot, ggpubr,
+  RColorBrewer, ggpubr,
   png, grid, magick, rsvg, lubridate, 
   stringr, stringi, googlesheets4, xml2,
-  parallel, fuzzyjoin
+  parallel, fuzzyjoin, grDevices, rlang
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

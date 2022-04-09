@@ -1,7 +1,6 @@
 ##---------------------------------------------------------------
 ##          Function that reads from API based on url           -
 ##---------------------------------------------------------------
-#* @export
 readAPI <- function(url, ...){
   temp <-
     url %>%
@@ -19,7 +18,6 @@ readAPI <- function(url, ...){
 ##---------------------------------------------------------------
 ##        Function that loads player ratings (attributes)       -
 ##---------------------------------------------------------------
-#* @export
 playerLoader <- function(leagueID, season = NULL){
   players <-
     readAPI(
@@ -44,13 +42,13 @@ playerLoader <- function(leagueID, season = NULL){
     players %>%
     ## dplyr::selects only names (for grouping) and attributes
     dplyr::select(
-      name,
-      team,
-      screening:professionalism
+      .data$name,
+      .data$team,
+      .data$screening:.data$professionalism
     ) %>%
     ## Creates a attribute column and value column for each player
     tidyr::pivot_longer(
-      cols = screening:professionalism,
+      cols = .data$screening:.data$professionalism,
       names_to = "attribute"
     ) %>%
     ## Adds the TPE cost for each respective attribute value
@@ -60,17 +58,17 @@ playerLoader <- function(leagueID, season = NULL){
     ) %>%
     ## Groups by name for summarizing
     dplyr::group_by(
-      name,
-      team
+      .data$name,
+      .data$team
     ) %>%
     ## Summarizes the used TPE based on attribute value
     dplyr::summarize(
       ## Removes the fixed attributes to 15 and compensates for 11 starting Stamina (OLD SCALE)
       ## Removes the fixed attributes to 15 and compensates for 12 starting Stamina (NEW SCALE after season 60)
-      usedTPE = dplyr::if_else(newScale, sum(newTPE) - 42*5 - 13, sum(TPE) - 62*5 - 16)
+      usedTPE = dplyr::if_else(newScale, sum(.data$newTPE) - 42*5 - 13, sum(.data$TPE) - 62*5 - 16)
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(name, usedTPE)
+    dplyr::select(.data$name, .data$usedTPE)
 
   players <-
     players %>%
@@ -85,13 +83,13 @@ playerLoader <- function(leagueID, season = NULL){
     goalies %>%
     ## dplyr::selects only names (for grouping) and attributes
     dplyr::select(
-      name,
-      team,
-      blocker:professionalism
+      .data$name,
+      .data$team,
+      .data$blocker:.data$professionalism
     ) %>%
     ## Creates a attribute column and value column for each player
     tidyr::pivot_longer(
-      cols = blocker:professionalism,
+      cols = .data$blocker:.data$professionalism,
       names_to = "attribute"
     ) %>%
     ## Adds the TPE cost for each respective attribute value
@@ -101,16 +99,16 @@ playerLoader <- function(leagueID, season = NULL){
     ) %>%
     ## Groups by name for summarizing
     dplyr::group_by(
-      name,
-      team
+      .data$name,
+      .data$team
     ) %>%
     ## Summarizes the used TPE based on attribute value
     dplyr::summarize(
       ## Removes the fixed attributes to 15 and compensates for 8 Aggression
-      usedTPE = sum(TPE) - 62*3 - 4
+      usedTPE = sum(.data$TPE) - 62*3 - 4
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(name, usedTPE)
+    dplyr::select(.data$name, .data$usedTPE)
 
   goalies <-
     goalies %>%
@@ -119,9 +117,9 @@ playerLoader <- function(leagueID, season = NULL){
       by = c("name")
     ) %>%
     dplyr::rename(
-      goaliePassing = passing,
-      goaliePuckhandling = puckhandling,
-      goaliePositioning = positioning
+      goaliePassing = .data$passing,
+      goaliePuckhandling = .data$puckhandling,
+      goaliePositioning = .data$positioning
     )
 
   ## Return a list of the loaded data
@@ -135,7 +133,6 @@ playerLoader <- function(leagueID, season = NULL){
 ##---------------------------------------------------------------
 ##            Function that loads player statistics             -
 ##---------------------------------------------------------------
-#* @export
 indStatsLoader <- function(leagueID, season = NULL, type = NULL){
   players <-
     readAPI(
@@ -156,7 +153,7 @@ indStatsLoader <- function(leagueID, season = NULL, type = NULL){
         dplyr::contains("TimeOnIce"),
         ~ format(
           as.POSIXct(
-            .x/gamesPlayed,
+            .x/.data$gamesPlayed,
             origin = "1970-01-01"
           ),
           "%M:%S"
@@ -175,7 +172,6 @@ indStatsLoader <- function(leagueID, season = NULL, type = NULL){
 ##---------------------------------------------------------------
 ##      Function that loads team statistics and information     -
 ##---------------------------------------------------------------
-#* @export
 teamLoader <-  function(leagueID, season = NULL){
   teams <-
     readAPI(
@@ -189,7 +185,6 @@ teamLoader <-  function(leagueID, season = NULL){
 ##----------------------------------------------------------------
 ##                  Function that loads schedule                 -
 ##----------------------------------------------------------------
-#* @export
 gamesLoader <- function(leagueID, season = NULL, type = NULL){
   schedule <-
     readAPI(
@@ -213,7 +208,6 @@ playoffLoader <- function(leagueID, season = NULL){
 ##---------------------------------------------------------------
 ##                Function that loads standings                 -
 ##---------------------------------------------------------------
-#* @export
 standingsLoader <- function(leagueID, season = NULL){
   standings <-
     readAPI(
