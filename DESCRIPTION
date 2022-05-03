@@ -13,7 +13,7 @@ Imports:
   httr, jsonlite, rvest, RCurl, dplyr, 
   plyr, tidyr, janitor, tibble,
   purrr, ggplot2, ggnewscale, 
-  RColorBrewer, ggpubr,
+  RColorBrewer, ggpubr, scales,
   png, grid, magick, rsvg, lubridate, 
   stringr, stringi, googlesheets4, xml2,
   parallel, fuzzyjoin, grDevices, rlang

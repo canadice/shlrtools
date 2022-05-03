@@ -1,6 +1,15 @@
-##---------------------------------------------------------------
-##          Function that reads from API based on url           -
-##---------------------------------------------------------------
+#' Calls the SHL Index API
+#'
+#' @param url The url to the SHL API.
+#' @param ... Additional queries for the API call.
+#' @return A data frame of the data.
+#' @export
+#' @examples
+#' readAPI(
+#'    url = "https://index.simulationhockey.com/api/v1/players/ratings",
+#'    query = list(league = 0, season = 63)
+#' )
+
 readAPI <- function(url, ...){
   temp <-
     url %>%
@@ -15,9 +24,19 @@ readAPI <- function(url, ...){
     return()
 }
 
-##---------------------------------------------------------------
-##        Function that loads player ratings (attributes)       -
-##---------------------------------------------------------------
+#' Loading the player attributes
+#'
+#' @param leagueID ID of the league to get attributes from, SHL = 0, SMJHL = 1, IIHF = 2, WJC = 3
+#' @param season The season to get the attributes from
+#'
+#' @returns
+#' Returns a list of two data.frames, one for players and one for goalies
+#'
+#' @export
+#' @examples
+#' # Loads the SHL player attributes from S64
+#' playerLoader(leagueID = 0, season = 64)
+
 playerLoader <- function(leagueID, season = NULL){
   players <-
     readAPI(
@@ -31,6 +50,7 @@ playerLoader <- function(leagueID, season = NULL){
     )
 
   ## Checks if season implies scale change
+  ## If is.null() is TRUE, it's a season with the new scale
   newScale <- season %>% is.null()
   if(is.numeric(season)){
     newScale <- season >= 60
@@ -130,9 +150,20 @@ playerLoader <- function(leagueID, season = NULL){
     return()
 }
 
-##---------------------------------------------------------------
-##            Function that loads player statistics             -
-##---------------------------------------------------------------
+#' Loading the player statistics
+#'
+#' @param leagueID ID of the league to get attributes from, SHL = 0, SMJHL = 1, IIHF = 2, WJC = 3
+#' @param season The season to get the attributes from
+#' @param type Selects whether pre-season, regular season, or post-season
+#'
+#' @returns
+#' List of two data.frames, one consisting of players and one consisting of goalies
+#'
+#' @export
+#' @examples
+#' # Loads the SHL player statistics from S64
+#' indStatsLoader(leagueID = 0, season = 64, type = "regular")
+
 indStatsLoader <- function(leagueID, season = NULL, type = NULL){
   players <-
     readAPI(
@@ -169,9 +200,19 @@ indStatsLoader <- function(leagueID, season = NULL, type = NULL){
     return()
 }
 
-##---------------------------------------------------------------
-##      Function that loads team statistics and information     -
-##---------------------------------------------------------------
+#' Loads team statistics and information from the Index
+#'
+#' @param leagueID ID of the league to get attributes from, SHL = 0, SMJHL = 1, IIHF = 2, WJC = 3
+#' @param season The season to get the attributes from
+#'
+#' @returns
+#' Returns a data.frame with the information
+#'
+#' @export
+#' @examples
+#' # Loads the SHL team information from season 64
+#' teamLoader(leagueID = 0, season = 64)
+
 teamLoader <-  function(leagueID, season = NULL){
   teams <-
     readAPI(
@@ -182,32 +223,51 @@ teamLoader <-  function(leagueID, season = NULL){
   return(teams)
 }
 
-##----------------------------------------------------------------
-##                  Function that loads schedule                 -
-##----------------------------------------------------------------
+#' Loads schedule from the Index
+#'
+#' @param leagueID ID of the league to get attributes from, SHL = 0, SMJHL = 1, IIHF = 2, WJC = 3
+#' @param season The season to get the attributes from
+#' @param type Selects whether pre-season, regular season, or post-season
+#'
+#' @returns
+#' Returns a data.frame with the scheduling
+#'
+#' @export
+#' @examples
+#' # Loads the SHL schedule from season 64
+#' gamesLoader(leagueID = 0, season = 64, type = "regular")
+#'
 gamesLoader <- function(leagueID, season = NULL, type = NULL){
-  schedule <-
-    readAPI(
-      url = "https://index.simulationhockey.com/api/v1/schedule",
-      query = list(league = leagueID, season = season, type = type)
-    )
+  if(type == "playoffs"){
+    schedule <-
+      readAPI(
+        url = "https://index.simulationhockey.com/api/v1/standings/playoffs",
+        query = list(league = leagueID, season = season)
+      )
+  } else {
+    schedule <-
+      readAPI(
+        url = "https://index.simulationhockey.com/api/v1/schedule",
+        query = list(league = leagueID, season = season, type = type)
+      )
+  }
 
   return(schedule)
 }
 
-playoffLoader <- function(leagueID, season = NULL){
-  schedule <-
-    readAPI(
-      url = "https://index.simulationhockey.com/api/v1/standings/playoffs",
-      query = list(league = leagueID, season = season)
-    )
+#' Loads team standings from the Index
+#'
+#' @param leagueID ID of the league to get attributes from, SHL = 0, SMJHL = 1, IIHF = 2, WJC = 3
+#' @param season The season to get the attributes from
+#'
+#' @returns
+#' Returns a data.frame with the information
+#'
+#' @export
+#' @examples
+#' # Loads the SHL team information from season 64
+#' standingsLoader(leagueID = 0, season = 64)
 
-  return(schedule)
-}
-
-##---------------------------------------------------------------
-##                Function that loads standings                 -
-##---------------------------------------------------------------
 standingsLoader <- function(leagueID, season = NULL){
   standings <-
     readAPI(

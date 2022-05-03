@@ -9,5 +9,5 @@
 #' @importFrom rlang .data
 NULL
 
-utils::globalVariables(c("tpeCost", "attKey", "teamInfo"))
+utils::globalVariables(c("tpeCost", "teamInfo"))
 
