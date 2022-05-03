@@ -71,6 +71,7 @@ addTeamLogo <- function(teamInfo){
           .data$team == "United States Red" ~ magick::image_read_svg(paste(raw, "graphics/United_States_Red.svg",sep = ""), width = 600, height = 600) %>% list(),
           .data$team == "Great Falls Grizzlies" ~ magick::image_read_svg(paste(raw, "graphics/Great_Falls.svg",sep = ""), width = 600, height = 600) %>% list(),
           .data$team == "Regina Elk" ~ magick::image_read_svg(paste(raw, "graphics/Regina.svg",sep = ""), width = 600, height = 600) %>% list(),
+          .data$team == "Yukon Malamutes" ~ image_read_svg(paste(raw, "graphics/Yukon.svg",sep = ""), width = 600, height = 600) %>% list(),
           TRUE ~ NA  %>% list()
         )
     )
