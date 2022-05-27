@@ -144,7 +144,7 @@ forumData <-
   ## Cleans up the transformation a bit
   mutate(
     clean_name =
-      str_squish(clean_name)) %>%
+      stringr::str_squish(clean_name)) %>%
 
   ## Uses standard names for positions
   ## Transforms some variables to numeric
@@ -173,11 +173,11 @@ forumData <-
                  "Winger"
                )
            ),
-         NAME=str_remove(NAME, pattern = " \\*"),
-         Posts = as.numeric(str_remove_all(Posts, pattern = "[^0-9]")),
-         Threads = as.numeric(str_remove_all(Threads, pattern = "[^0-9]")),
-         Reputation = as.numeric(str_remove_all(Reputation, pattern = "[^0-9]")),
-         Jersey.Nr. = as.numeric(str_remove_all(Jersey.Nr., pattern = "[^0-9]"))
+         NAME=stringr::str_remove(NAME, pattern = " \\*"),
+         Posts = as.numeric(stringr::str_remove_all(Posts, pattern = "[^0-9]")),
+         Threads = as.numeric(stringr::str_remove_all(Threads, pattern = "[^0-9]")),
+         Reputation = as.numeric(stringr::str_remove_all(Reputation, pattern = "[^0-9]")),
+         Jersey.Nr. = as.numeric(stringr::str_remove_all(Jersey.Nr., pattern = "[^0-9]"))
   )
 
 saveRDS(

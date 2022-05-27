@@ -377,7 +377,8 @@ playerScraper <-
       postData <-
         postData %>%
         rvest::html_text()
-    } else if(stringr::str_detect(string = checkText, pattern = "First Name")){
+    } else if(stringr::str_detect(string = checkText[1], pattern = "First Name")){
+
       postData <-
         postData %>%
         rvest::html_nodes(".mycode_font") %>%
