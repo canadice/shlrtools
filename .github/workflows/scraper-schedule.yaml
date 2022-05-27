@@ -23,12 +23,6 @@ jobs:
           r-version: "4.1.1"
           http-user-agent: ${{ matrix.config.http-user-agent }}
       
-      - name: R Build and Checks
-        uses: Swechhya/R-actions@v1.2
-        with:
-          action: 'build'
-          needsBioc: false          
-
       - uses: r-lib/actions/setup-pandoc@master
 
       - name: Query dependencies
