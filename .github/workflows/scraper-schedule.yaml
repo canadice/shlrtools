@@ -16,18 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: R Build and Checks
-        uses: Swechhya/R-actions@v1.2
-        with:
-          action: 'build'
-          needsBioc: false
-          buildSubDirectory: './'
+
           
       - uses: r-lib/actions/setup-r@master
         with:
           r-version: "4.1.1"
           http-user-agent: ${{ matrix.config.http-user-agent }}
-          
+      
+      - name: R Build and Checks
+        uses: Swechhya/R-actions@v1.2
+        with:
+          action: 'build'
+          needsBioc: false          
 
       - uses: r-lib/actions/setup-pandoc@master
 
