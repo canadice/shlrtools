@@ -180,13 +180,13 @@ forumData <-
          Jersey.Nr. = as.numeric(stringr::str_remove_all(Jersey.Nr., pattern = "[^0-9]"))
   )
 
-saveRDS(
+save(
   forumData,
   file =
     paste(
       "data/forumData",
       lubridate::today(),
-      ".rds",
+      ".RData",
       sep = ""
     )
 )
