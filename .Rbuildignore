@@ -1,3 +1,5 @@
 ^shlrtools\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^.github$
+^R/UPDATING INTERNAL PACKAGES.R$
