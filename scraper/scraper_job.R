@@ -186,7 +186,7 @@ saveRDS(
     paste(
       "data/forumData",
       lubridate::today(),
-      ".rda",
+      ".rds",
       sep = ""
     )
 )
