@@ -4,7 +4,10 @@
 \alias{scraper}
 \title{The main forum scraper}
 \usage{
-scraper()
+scraper(parallell = FALSE)
+}
+\arguments{
+\item{parallell}{Boolean argument that controls if parallellization should occur.}
 }
 \value{
 Returns a data frame with all player information from the forum.

@@ -131,6 +131,7 @@ draftedProspects <- function(){
 #' The main forum scraper
 #'
 #' @description Making use of created scraper functions, this function scrapes and aggregates all info from the forum
+#' @param parallell Boolean argument that controls if parallellization should occur.
 #'
 #' @export
 #'
@@ -138,7 +139,7 @@ draftedProspects <- function(){
 #' Returns a data frame with all player information from the forum.
 #'
 
-scraper <- function(){
+scraper <- function(parallell = FALSE){
   ## Current season
   currentSeason <-
     playerLoader(0)$players %>%
@@ -146,49 +147,82 @@ scraper <- function(){
     unique() %>%
     unname()
 
+  if(parallell){
+    cl <-
+      parallel::makeCluster(getOption("cl.cores", 4))
 
-  cl <-
-    parallel::makeCluster(getOption("cl.cores", 4))
-
-  parallel::clusterExport(
-    cl,
-    varlist =
-      c(
-        "%>%",
-        "teamInfo",
-        "tpeCost"
-      )
-  )
-
-  playerLinks <-
-    parallel::clusterApply(
+    parallel::clusterExport(
       cl,
-      shlrtools::leagueLinks(),
-      fun = shlrtools::teamScraper
-    ) %>%
-    unlist() %>%
-    parallel::clusterApply(
-      cl = cl,
-      x = .,
-      fun = shlrtools::playerLinkScraper
-    ) %>%
-    unlist() %>%
-    c(
-      .,
-      c(
-        shlrtools::prospectFALinks()
-      ) %>%
-        sapply(FUN = shlrtools::prospectsFAScraper) %>%
-        unlist()
-    ) %>%
-    unique() %>%
-    stringi::stri_remove_na()
-
-  playerData <-
-    parallel::clusterApply(
-      cl = cl,
-      x = playerLinks,
-      fun = shlrtools::playerScraper
+      varlist =
+        c(
+          "%>%",
+          "teamInfo",
+          "tpeCost"
+        )
     )
 
+    playerLinks <-
+      parallel::clusterApply(
+        cl,
+        shlrtools::leagueLinks(),
+        fun = shlrtools::teamScraper
+      ) %>%
+      unlist() %>%
+      parallel::clusterApply(
+        cl = cl,
+        x = .,
+        fun = shlrtools::playerLinkScraper
+      ) %>%
+      unlist() %>%
+      c(
+        .,
+        c(
+          shlrtools::prospectFALinks()
+        ) %>%
+          sapply(FUN = shlrtools::prospectsFAScraper) %>%
+          unlist()
+      ) %>%
+      unique() %>%
+      stringi::stri_remove_na()
+
+    playerData <-
+      parallel::clusterApply(
+        cl = cl,
+        x = playerLinks,
+        fun = shlrtools::playerScraper
+      )
+  } else {
+
+    playerLinks <-
+      lapply(
+        shlrtools::leagueLinks(),
+        FUN = shlrtools::teamScraper
+      ) %>%
+      unlist() %>%
+      lapply(
+        X = .,
+        FUN = shlrtools::playerLinkScraper
+      ) %>%
+      unlist() %>%
+      c(
+        .,
+        c(
+          shlrtools::prospectFALinks()
+        ) %>%
+          sapply(FUN = shlrtools::prospectsFAScraper) %>%
+          unlist()
+      ) %>%
+      unique() %>%
+      stringi::stri_remove_na()
+
+    playerData <-
+      lapply(
+        X = playerLinks,
+        FUN = shlrtools::playerScraper
+      ) %>%
+      return()
+  }
+
 }
+
+
