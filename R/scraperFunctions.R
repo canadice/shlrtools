@@ -849,7 +849,7 @@ userScraper <- function(link){
 
     ## Removes \n from the text and removes unnecessary white space
     dplyr::mutate_all(
-      ~ stringr::str_replace_all(.data, pattern = "\n", replacement = "") %>%
+      ~ stringr::str_replace_all(.x, pattern = "\n", replacement = "") %>%
         stringr::str_squish()
     ) %>%
 
