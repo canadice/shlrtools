@@ -1,6 +1,68 @@
 require(shlrtools)
 require(dplyr)
 
+### Loading data sets
+## Current forum scrape data from Google Sheets that is automatically written every day
+googlesheets4::gs4_deauth()
+
+iihfTransfer <-
+  googlesheets4::read_sheet(
+    ss = "https://docs.google.com/spreadsheets/d/1shZphSBULx7G8hYDtoUqTW6gy445_DDA6NIHqFrayLs/edit#gid=0",
+    sheet = "Transfers"
+  )
+
+draftedProspects <-
+  c(
+    #ATL
+    "https://simulationhockey.com/forumdisplay.php?fid=706",
+    #BAP
+    "https://simulationhockey.com/forumdisplay.php?fid=601",
+    #BUF
+    "https://simulationhockey.com/forumdisplay.php?fid=595",
+    #HAM
+    "https://simulationhockey.com/forumdisplay.php?fid=596",
+    #MAN
+    "https://simulationhockey.com/forumdisplay.php?fid=597",
+    #MTL
+    "https://simulationhockey.com/forumdisplay.php?fid=744",
+    #NEW
+    "https://simulationhockey.com/forumdisplay.php?fid=599",
+    #PHI
+    "https://simulationhockey.com/forumdisplay.php?fid=743",
+    #TBB
+    "https://simulationhockey.com/forumdisplay.php?fid=607",
+    #TOR
+    "https://simulationhockey.com/forumdisplay.php?fid=600",
+    #CGY
+    "https://simulationhockey.com/forumdisplay.php?fid=603",
+    #CHI
+    "https://simulationhockey.com/forumdisplay.php?fid=636",
+    #EDM
+    "https://simulationhockey.com/forumdisplay.php?fid=604",
+    #LAP
+    "https://simulationhockey.com/forumdisplay.php?fid=605",
+    #MIN
+    "https://simulationhockey.com/forumdisplay.php?fid=598",
+    #NOLA
+    "https://simulationhockey.com/forumdisplay.php?fid=641",
+    #SFP
+    "https://simulationhockey.com/forumdisplay.php?fid=606",
+    #SEA
+    "https://simulationhockey.com/forumdisplay.php?fid=705",
+    #TEX
+    "https://simulationhockey.com/forumdisplay.php?fid=608",
+    #WPG
+    "https://simulationhockey.com/forumdisplay.php?fid=602"
+  ) %>%
+  lapply(
+    X = .,
+    FUN = draftedProspectScraper
+  ) %>%
+  do.call(
+    what = rbind,
+    args = .
+  )
+
 ## Scrapes the forum
 data <-
   scraper()
