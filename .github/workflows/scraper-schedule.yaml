@@ -9,6 +9,9 @@ on:
 jobs:
   generate-data:
     runs-on: windows-latest
+    
+    strategy:
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v2
@@ -38,6 +41,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          devtools::install_github("Canadice/shlrtools")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
