@@ -15,7 +15,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
+      
+      - name: R Build and Checks
+        uses: Swechhya/R-actions@v1.2
+        with:
+          action: 'build'
+          needsBioc: false
+          buildSubDirectory: './'
+          
       - uses: r-lib/actions/setup-r@master
         with:
           r-version: "4.1.1"
@@ -41,9 +48,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          install.packages("devtools")
           remotes::install_deps(dependencies = TRUE)
-          devtools::install_github("Canadice/shlrtools")
         shell: Rscript {0}
 
       - name: Run the scraper
