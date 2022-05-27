@@ -53,7 +53,7 @@ jobs:
       - name: Run the scraper
         run: |
           source("R/GITHUB SCRAPER ACTION.R")
-          shell: Rscript {0}
+        shell: Rscript {0}
           
       - name: Commit the results of the scraper
         run: |
