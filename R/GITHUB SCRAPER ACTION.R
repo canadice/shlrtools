@@ -1,5 +1,5 @@
 data(iris)
 
-write.csv(iris, file = "test.csv")
+write.csv(iris, file = "data/test.csv")
 
 
