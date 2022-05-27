@@ -54,7 +54,7 @@ jobs:
 
       - name: Run the scraper
         run: |
-          source("R/GITHUB SCRAPER ACTION.R")
+          source("scraper/scraper_job.R")
         shell: Rscript {0}
           
       - name: Commit the results of the scraper

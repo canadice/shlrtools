@@ -119,12 +119,12 @@ draftedProspects <- function(){
     "https://simulationhockey.com/forumdisplay.php?fid=602"
   ) %>%
     lapply(
-      X = .data,
+      X = .,
       FUN = draftedProspectScraper
     ) %>%
     do.call(
       what = rbind,
-      args = .data
+      args = .
     )
 }
 
@@ -142,7 +142,7 @@ scraper <- function(){
   ## Current season
   currentSeason <-
     playerLoader(0)$players %>%
-    dplyr::select(.data$season) %>%
+    dplyr::select(season) %>%
     unique() %>%
     unname()
 
