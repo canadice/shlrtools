@@ -328,7 +328,7 @@ playerScraper <-
       rvest::html_nodes(".float_right") %>%
       rvest::html_text() %>%
       stringr::str_squish() %>%
-      .data[1:2]
+      .[1:2]
 
     names(USERDATA) <- c("Posts", "Threads")
 
@@ -533,22 +533,22 @@ playerScraper <-
       PLAYERINFO %>%
       dplyr::mutate(
         `IIHF Nation` =
-          if(exists('Birthplace', where = .data)){
+          if(exists('Birthplace', where = .)){
             dplyr::case_when(
-              stringr::str_detect(.data$Birthplace, pattern = "Sweden") ~ "Sweden",
-              stringr::str_detect(.data$Birthplace, pattern = "Canada|Ontario") ~ "Canada",
-              stringr::str_detect(.data$Birthplace, pattern = "USA|United States|Michigan|NY|N.Y.|Georgia") ~ "USA",
-              stringr::str_detect(.data$Birthplace, pattern = "Finland") ~ "Finland",
-              stringr::str_detect(.data$Birthplace, pattern = "Russia") ~ "Russia",
-              stringr::str_detect(.data$Birthplace, pattern = "Austria") ~ "Austria",
-              stringr::str_detect(.data$Birthplace, pattern = "Czechia|Czech Republic|CZE|Czechoslovakia") ~ "Czechia",
-              stringr::str_detect(.data$Birthplace, pattern = "Germany") ~ "Germany",
-              stringr::str_detect(.data$Birthplace, pattern = "England|Wales|Scotland|Northern Ireland|United Kingdom|Great Britain") ~ "Great Britain",
-              stringr::str_detect(.data$Birthplace, pattern = "Ireland") ~ "Ireland",
-              stringr::str_detect(.data$Birthplace, pattern = "Japan") ~ "Japan",
-              stringr::str_detect(.data$Birthplace, pattern = "Latvia") ~ "Latvia",
-              stringr::str_detect(.data$Birthplace, pattern = "Norway") ~ "Norway",
-              stringr::str_detect(.data$Birthplace, pattern = "Switzerland") ~ "Switzerland",
+              stringr::str_detect(Birthplace, pattern = "Sweden") ~ "Sweden",
+              stringr::str_detect(Birthplace, pattern = "Canada|Ontario") ~ "Canada",
+              stringr::str_detect(Birthplace, pattern = "USA|United States|Michigan|NY|N.Y.|Georgia") ~ "USA",
+              stringr::str_detect(Birthplace, pattern = "Finland") ~ "Finland",
+              stringr::str_detect(Birthplace, pattern = "Russia") ~ "Russia",
+              stringr::str_detect(Birthplace, pattern = "Austria") ~ "Austria",
+              stringr::str_detect(Birthplace, pattern = "Czechia|Czech Republic|CZE|Czechoslovakia") ~ "Czechia",
+              stringr::str_detect(Birthplace, pattern = "Germany") ~ "Germany",
+              stringr::str_detect(Birthplace, pattern = "England|Wales|Scotland|Northern Ireland|United Kingdom|Great Britain") ~ "Great Britain",
+              stringr::str_detect(Birthplace, pattern = "Ireland") ~ "Ireland",
+              stringr::str_detect(Birthplace, pattern = "Japan") ~ "Japan",
+              stringr::str_detect(Birthplace, pattern = "Latvia") ~ "Latvia",
+              stringr::str_detect(Birthplace, pattern = "Norway") ~ "Norway",
+              stringr::str_detect(Birthplace, pattern = "Switzerland") ~ "Switzerland",
               TRUE ~ "Unassigned"
             )
           } else {
@@ -761,6 +761,7 @@ playerScraper <-
 #'
 #' @param link Forum link to a user
 #'
+#' @export
 #' @returns
 #' Data table with user data
 #'
