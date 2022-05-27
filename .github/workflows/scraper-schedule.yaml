@@ -49,6 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
+          remotes::install_github("Canadice/shlrtools")
         shell: Rscript {0}
 
       - name: Run the scraper
