@@ -7,27 +7,27 @@ on:
 jobs:
   generate-data:
     runs-on: ${{ matrix.config.os }}
-      
-    name: Test
-    
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
     strategy:
       fail-fast: false
       matrix:
         config:
           - {os: ubuntu-latest,   r: 'release'}
-      
+
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: r-lib/actions/setup-r@v2
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@master
         with:
-          r-version: '4.1.1' # The R version to download (if necessary) and use.
+          r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
-      - run: Rscript -e 'print("hello")'
 
       - uses: r-lib/actions/setup-pandoc@master
 
@@ -50,7 +50,7 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
-      
+        
       - name: Run the scraper
         run: |
           source("R/GITHUB SCRAPER ACTION.R")
