@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron: "0 */12 * * *"
+    - cron: "0 30 11/12 * * * *"
     
 jobs:
   generate-data:
@@ -48,3 +48,16 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
+      
+      - name: Run the scraper
+        run: |
+          source("R/GITHUB SCRAPER ACTION.R")
+          shell: Rscript {0}
+          
+      - name: Commit the results of the scraper
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add --all
+          git commit -am "add data"
+          git push           
