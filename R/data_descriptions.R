@@ -33,3 +33,22 @@
 #'    \item{alt2}{Alternative color of the team}
 #' }
 "teamInfo"
+
+#' Table of attribute names
+#'
+#' A table containing the abbreviations, FHM, and normal attribute names.
+#'
+#' @format A data frame with 41 observations and 3 variables
+#' \describe{
+#'    \item{abb}{Three letter abbreviation of the attribute names}
+#'    \item{attributeIndex}{Name of attribute from the Index (exported from FHM)}
+#'    \item{attribute}{Normal name of the attribute}
+#' }
+"attKey"
+
+#' Forum Scrape Data
+#'
+#' An .RData containing the result of a daily forum scrape. It includes information of all players.
+#'
+#' @format A data frame with a number of observations and 41 variables
+"forumData"
