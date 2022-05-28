@@ -1,6 +1,6 @@
 Package: shlrtools
 Title: Tools for the Simulation Hockey League
-Version: 0.1.0.0
+Version: 0.1.0.1
 Authors@R: person("Canadice", "SHL", email = "canadice.shl@gmail.com", role = c("aut", "cre"))
 Description: Package provides functions and tools for the Simulation Hockey League. The package has functions for 
   scraping the forum website, analyzing saved games from FHM6, 
