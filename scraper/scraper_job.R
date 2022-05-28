@@ -182,13 +182,7 @@ forumData <-
 
 save(
   forumData,
-  file =
-    paste(
-      "data/forumData",
-      lubridate::today(),
-      ".RData",
-      sep = ""
-    )
+  file = "data/forumData.RData"
 )
 
 
