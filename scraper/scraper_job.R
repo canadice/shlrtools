@@ -185,6 +185,7 @@ save(
   file = "data/forumData.RData"
 )
 
-write(rjson::toJSON(forumData), "data/forumData.JSON")
+write.csv(forumData, file = "data/forumData.csv", row.names = FALSE)
+
 
 
