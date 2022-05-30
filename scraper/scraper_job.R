@@ -185,5 +185,6 @@ save(
   file = "data/forumData.RData"
 )
 
+write(rjson::toJSON(forumData), "data/forumData.JSON")
 
 
