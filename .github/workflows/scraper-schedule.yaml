@@ -68,17 +68,4 @@ jobs:
           git add --all
           git commit -am "Daily data"
           git push           
-          
-      - name: Update Forum Scrape Worksheet
-        uses: jroehl/gsheet.action@v1.0.0
-        with:
-          spreadsheedId: ${{ secrets.SPREADSHEET_ID }}
-          commands: |
-            [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "<gsheet.action_e2e-tests_${{ github.sha }}>" }},
-              { "command": "updateData", "args": { "data": "data/forumData.JSON" }}
-            ]            
-        env:
-          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
-          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-        
+ 
