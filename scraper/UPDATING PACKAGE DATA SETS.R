@@ -164,7 +164,7 @@ historyUpdate <- function(leagueId, season){
 #     historySkaterSeason$Season > 52
 #   )
 #
-# historySkaterSeason[fixIndex, "newTeamID"] <- historySkaterSeason[fixIndex, "franchiseID"]
+# historySkaterSeason[,"newTeamID"] <- historySkaterSeason[,"newTeamID"] %>% as.numeric()
 
 historySkaterSeason <- historyUpdate(leagueId = 2, season = 64)
 
