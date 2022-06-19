@@ -99,14 +99,8 @@ historyUpdate <- function(leagueId, season){
         select(
           franchiseID,
           leagueID,
-          teamID = fhmID,
+          newTeamID = teamID,
           abbr
-        ) %>%
-        mutate(
-          teamID = if_else(abbr == "ANA", 5 %>% as.integer(), teamID)
-        ) %>%
-        filter(
-          !is.na(teamID)
         ),
       by = c("team" = "abbr", "league" = "leagueID")
     ) %>%
@@ -116,7 +110,7 @@ historyUpdate <- function(leagueId, season){
       Name = name,
       leagueID = league,
       -team,
-      teamID,
+      newTeamID,
       Season = season,
       isPlayoffs = type,
       GamesPlayed = gamesPlayed,
@@ -166,10 +160,11 @@ historyUpdate <- function(leagueId, season){
 # fixIndex <-
 #   which(
 #     historySkaterSeason$leagueID == 2 &
-#     historySkaterSeason$teamID %>% is.na()
+#     historySkaterSeason$newTeamID %>% is.na() &
+#     historySkaterSeason$Season > 52
 #   )
 #
-# historySkaterSeason[fixIndex, c("teamID", "franchiseID")] <- 101
+# historySkaterSeason[fixIndex, "newTeamID"] <- historySkaterSeason[fixIndex, "franchiseID"]
 
 historySkaterSeason <- historyUpdate(leagueId = 2, season = 64)
 
