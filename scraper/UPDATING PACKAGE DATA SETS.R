@@ -159,24 +159,33 @@ historyUpdate <- function(leagueId, season){
 
 # fixIndex <-
 #   which(
-#     historySkaterSeason$leagueID == 1 &
-#     historySkaterSeason$Season > 52
+#     !(historySkaterSeason$PKMinutes %>% str_detect(pattern = ":"))
 #   )
-# historySkaterSeason[fixIndex,"newTeamID"] <-
-#   historySkaterSeason[fixIndex,"newTeamID"] %>%
-#   data.frame(newTeamID = .) %>%
-#   left_join(
-#     teamInfo %>%
-#       select(
-#         franchiseID,
-#         leagueID,
-#         teamID,
-#         fhmID
-#       ) %>%
-#       filter(leagueID == 1),
-#     by = c("newTeamID" = "fhmID")
+#
+# historySkaterSeason[fixIndex,"PKMinutes"] <-
+#   historySkaterSeason[fixIndex,"PKMinutes"] %>%
+#   as.numeric() %>%
+#   as.POSIXct(
+#     .,
+#     origin = "1970-01-01"
 #   ) %>%
-#   select(teamID)
+#   format(
+#     "%M:%S"
+#   )
+
+  # data.frame(newTeamID = .) %>%
+  # left_join(
+  #   teamInfo %>%
+  #     select(
+  #       franchiseID,
+  #       leagueID,
+  #       teamID,
+  #       fhmID
+  #     ) %>%
+  #     filter(leagueID == 1),
+  #   by = c("newTeamID" = "fhmID")
+  # ) %>%
+  # select(teamID)
 #
 # historySkaterSeason <-
 #   historySkaterSeason %>%
