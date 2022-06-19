@@ -168,10 +168,10 @@ historyUpdate <- function(leagueId, season){
 #     historySkaterSeason$leagueID == 2 &
 #     historySkaterSeason$teamID %>% is.na()
 #   )
+#
+# historySkaterSeason[fixIndex, c("teamID", "franchiseID")] <- 101
 
-historySkaterSeason[fixIndex, c("teamID", "franchiseID")] <- 101
-
-historySkaterSeason <- historyUpdate(leagueId = 2, season = 57)
+historySkaterSeason <- historyUpdate(leagueId = 2, season = 64)
 
 usethis::use_data(historySkaterSeason, internal = FALSE, overwrite = TRUE)
 
