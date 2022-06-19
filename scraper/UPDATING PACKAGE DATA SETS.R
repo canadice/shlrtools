@@ -157,14 +157,27 @@ historyUpdate <- function(leagueId, season){
     )
 }
 
-# fixIndex <-
-#   which(
-#     historySkaterSeason$leagueID == 2 &
-#     historySkaterSeason$newTeamID %>% is.na() &
-#     historySkaterSeason$Season > 52
-#   )
-#
-# historySkaterSeason[,"newTeamID"] <- historySkaterSeason[,"newTeamID"] %>% as.numeric()
+fixIndex <-
+  which(
+    historySkaterSeason$leagueID == 1 &
+    historySkaterSeason$Season > 52
+  )
+
+# historySkaterSeason[fixIndex,"newTeamID"] <-
+#   historySkaterSeason[fixIndex,"newTeamID"] %>%
+#   data.frame(newTeamID = .) %>%
+#   left_join(
+#     teamInfo %>%
+#       select(
+#         franchiseID,
+#         leagueID,
+#         teamID,
+#         fhmID
+#       ) %>%
+#       filter(leagueID == 1),
+#     by = c("newTeamID" = "fhmID")
+#   ) %>%
+#   select(teamID)
 
 historySkaterSeason <- historyUpdate(leagueId = 2, season = 64)
 
