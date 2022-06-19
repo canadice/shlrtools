@@ -2,5 +2,5 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^.github$
-^R/UPDATING INTERNAL PACKAGES\.R$
+^R\\UPDATING INTERNAL PACKAGES\.R$
 ^scraper$

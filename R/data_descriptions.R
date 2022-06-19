@@ -52,3 +52,10 @@
 #'
 #' @format A data frame with a number of observations and 41 variables
 "forumData"
+
+#' History Skater Data
+#'
+#' An .RData containing the historical data of all skaters from all four leagues (WJC is incomplete)
+#'
+#' @format A data frame with a number of observations and variables
+"historySkaterSeason"
