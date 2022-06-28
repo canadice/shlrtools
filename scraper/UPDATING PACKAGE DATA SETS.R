@@ -240,7 +240,7 @@ historyUpdate <- function(leagueId, season){
 #   )
 
 
-historySkaterSeason <- historyUpdate(leagueId = 2, season = 64)
+historySkaterSeason <- historyUpdate(leagueId = 0, season = 65)
 
 usethis::use_data(historySkaterSeason, internal = FALSE, overwrite = TRUE)
 
