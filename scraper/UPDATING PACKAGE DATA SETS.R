@@ -157,6 +157,7 @@ historyUpdate <- function(leagueId, season){
     )
 }
 
+{
 # fixIndex <-
 #   which(
 #     !(historySkaterSeason$PKMinutes %>% str_detect(pattern = ":"))
@@ -238,9 +239,12 @@ historyUpdate <- function(leagueId, season){
 #         TRUE ~ newTeamID
 #       )
 #   )
+}
 
+# Checks which data is in the history
+table(historySkaterSeason$leagueID, historySkaterSeason$Season)
 
-historySkaterSeason <- historyUpdate(leagueId = 0, season = 65)
+historySkaterSeason <- historyUpdate(leagueId = 3, season = 65)
 
 usethis::use_data(historySkaterSeason, internal = FALSE, overwrite = TRUE)
 
