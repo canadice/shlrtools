@@ -242,23 +242,23 @@ playerScraper <-
       POSITION <- NA
     }
 
-    ### Checks if the name includes a nickname
-    if(NAME %>% is.na()){
-      #Do nothing
-
-      NICKNAME <- NA
-    } else if (NAME %>% stringr::str_detect(pattern = "\"")){
-      NICKNAME <-
-        NAME %>%
-        stringr::str_extract_all(pattern = "\"[A-z ]+\"", simplify = TRUE)
-
-      NAME <-
-        NAME %>%
-        stringr::str_remove_all(pattern = "\"[A-z ]+\"") %>%
-        stringr::str_squish()
-    } else {
-      NICKNAME <- NA
-    }
+    # ### Checks if the name includes a nickname
+    # if(NAME %>% is.na()){
+    #   #Do nothing
+    #
+    #   NICKNAME <- NA
+    # } else if (NAME %>% stringr::str_detect(pattern = "\"")){
+    #   NICKNAME <-
+    #     NAME %>%
+    #     stringr::str_extract_all(pattern = "\"[A-z ]+\"", simplify = TRUE)
+    #
+    #   NAME <-
+    #     NAME %>%
+    #     stringr::str_remove_all(pattern = "\"[A-z ]+\"") %>%
+    #     stringr::str_squish()
+    # } else {
+    #   NICKNAME <- NA
+    # }
 
     ### Reading the TPE from the post title
     TPE <-
@@ -376,18 +376,18 @@ playerScraper <-
     if(length(checkText) == 0){
       postData <-
         postData %>%
-        rvest::html_text()
+        rvest::html_text2()
     } else if(stringr::str_detect(string = checkText[1], pattern = "First Name")){
 
       postData <-
         postData %>%
         rvest::html_nodes(".mycode_font") %>%
-        rvest::html_text() %>%
+        rvest::html_text2() %>%
         paste0(collapse = "\n")
     } else {
       postData <-
         postData %>%
-        rvest::html_text()
+        rvest::html_text2()
     }
 
     FIRSTNAME <-
@@ -411,6 +411,18 @@ playerScraper <-
     RECRUITEDBY <-
       postData %>%
       stringr::str_match(pattern = "Recruited[A-z ]+:(.*?)\\n") %>%
+      unlist() %>%
+      dplyr::nth(2)
+
+    HEIGHT <-
+      postData %>%
+      stringr::str_match(pattern = "Height:(.*?)\\n") %>%
+      unlist() %>%
+      dplyr::nth(2)
+
+    WEIGHT <-
+      postData %>%
+      stringr::str_match(pattern = "Weight:(.*?)\\n") %>%
       unlist() %>%
       dplyr::nth(2)
 
@@ -440,7 +452,9 @@ playerScraper <-
         JERSEYNR,
         RECRUITEDBY,
         RENDER,
-        BIRTHPLACE
+        BIRTHPLACE,
+        HEIGHT,
+        WEIGHT
       ) %>%
       stringr::str_trim() %>%
       t() %>%
@@ -454,9 +468,72 @@ playerScraper <-
         "Jersey Nr.",
         "Recruited By",
         "Player Render",
-        "Birthplace"
+        "Birthplace",
+        "Height",
+        "Weight"
       )
 
+
+    ### Player Attributes
+    if(stringr::str_detect(POSITION, "Goal")){
+      ATTRIBUTES <-
+        postData %>%
+        stringr::str_split("Blocker", simplify = TRUE) %>%
+        dplyr::nth(2) %>%
+        stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
+        dplyr::nth(1) %>%
+        stringr::str_remove_all("Goalie Ratings|Mental Ratings") %>%
+        stringr::str_split(":|\\n+", simplify = TRUE) %>%
+        c(., "15") %>%
+        stringr::str_squish() %>%
+        matrix(ncol = 2, byrow = TRUE) %>%
+        t() %>%
+        data.frame()
+
+      colnames(ATTRIBUTES) <- ATTRIBUTES[1,]
+      colnames(ATTRIBUTES)[1] <- "Blocker"
+      colnames(ATTRIBUTES)[length(colnames(ATTRIBUTES))] <- "*Professionalism"
+
+      ATTRIBUTES <-
+        ATTRIBUTES[-1,] %>%
+        dplyr::mutate(
+          dplyr::across(
+            dplyr::everything(),
+            as.numeric
+          )
+        )
+    } else {
+      ATTRIBUTES <-
+        postData %>%
+        stringr::str_split("Screening", simplify = TRUE) %>%
+        dplyr::nth(2) %>%
+        stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
+        dplyr::nth(1) %>%
+        stringr::str_remove_all("Defensive Ratings|Mental Ratings|Physical Ratings") %>%
+        stringr::str_split(":|\\n+", simplify = TRUE) %>%
+        c(., "15") %>%
+        stringr::str_squish() %>%
+        matrix(ncol = 2, byrow = TRUE) %>%
+        t() %>%
+        data.frame()
+
+      ATTRIBUTES <-
+        ATTRIBUTES[,!apply(X = ATTRIBUTES, MARGIN = 2, FUN = function(x){sum(x == "")==2})]
+
+      colnames(ATTRIBUTES) <- ATTRIBUTES[1,]
+      colnames(ATTRIBUTES)[1] <- "Screening"
+      colnames(ATTRIBUTES)[length(colnames(ATTRIBUTES))] <- "*Professionalism"
+
+      ATTRIBUTES <-
+        ATTRIBUTES[-1,] %>%
+        dplyr::mutate(
+          dplyr::across(
+            dplyr::everything(),
+            as.numeric
+          )
+        )
+    }
+{
     #
     # if(stringr::str_detect(postData, pattern = "Attributes")){
     #   postData <-
@@ -529,7 +606,7 @@ playerScraper <-
     # colnames(PLAYERINFO)[colnames(PLAYERINFO) %>% stringr::str_detect(pattern = "Jersey")] <- "Jersey Nr."
     # colnames(PLAYERINFO)[colnames(PLAYERINFO) %>% stringr::str_detect(pattern = "Birth[A-z]+")] <- "Birthplace"
     #
-
+}
     PLAYERINFO <-
       PLAYERINFO %>%
       dplyr::mutate(
@@ -556,7 +633,7 @@ playerScraper <-
             "Unassigned"
           }
       )
-
+{
     ####### CODE FOR SCRAPING INFORMATION THAT IS NO LONGER USED    #######
     # ## Specifies which tags to use for the player information splits
     # playerMeta <-
@@ -734,13 +811,14 @@ playerScraper <-
     #   ) %>%
     #   unlist()
     #######
+      }
 
     ### Combines and structures the scraped data into a data.frame
     ##  Commented parts are from the discontinued playerRatings scraper that is no longer used
     data <-
       data.frame(
         NAME,
-        NICKNAME,
+        # NICKNAME,
         CLASS,
         POSITION,
         TPE,
@@ -751,7 +829,8 @@ playerScraper <-
         USERDATA %>% t(),
         #USEDTPE,
         PLAYERTEAM,
-        PLAYERINFO #,
+        PLAYERINFO,
+        ATTRIBUTES
         #PLAYERRATINGS %>% t()
       )
 

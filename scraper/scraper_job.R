@@ -67,8 +67,10 @@ draftedProspects <-
 data <-
   scraper()
 
+
+
 data <-
-  data %>%
+  data[which(lapply(data, is.data.frame) %>% unlist())] %>%
   do.call(
     args = .,
     what = plyr::rbind.fill
@@ -186,6 +188,5 @@ save(
 )
 
 write.csv(forumData, file = "data/forumData.csv", row.names = FALSE)
-
 
 
