@@ -244,7 +244,7 @@ historyUpdate <- function(leagueId, season){
 # Checks which data is in the history
 table(historySkaterSeason$leagueID, historySkaterSeason$Season)
 
-historySkaterSeason <- historyUpdate(leagueId = 3, season = 65)
+historySkaterSeason <- historyUpdate(leagueId = 0, season = 66)
 
 usethis::use_data(historySkaterSeason, internal = FALSE, overwrite = TRUE)
 
