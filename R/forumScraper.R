@@ -236,6 +236,8 @@ scraper <- function(parallell = FALSE){
       return()
   }
 
+  warnings()
+
 }
 
 
