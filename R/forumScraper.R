@@ -238,6 +238,7 @@ scraper <- function(parallell = FALSE){
 
   warnings()
 
+  return(playerData)
 }
 
 
