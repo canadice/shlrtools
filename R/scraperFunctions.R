@@ -891,11 +891,11 @@ userScraper <- function(link){
     dplyr::mutate(
       value =
         dplyr::case_when(
-          stringr::str_detect(.data$value, pattern = "minute") ~ lubridate::today(),
-          stringr::str_detect(.data$value, pattern = "hour") ~ lubridate::today(),
-          stringr::str_detect(.data$value, pattern = "Today") ~ lubridate::today(),
-          stringr::str_detect(.data$value, pattern = "Yesterday") ~ lubridate::today()-1,
-          TRUE ~ lubridate::as_date(.data$value, format = "%m-%d-%Y")
+          stringr::str_detect(value, pattern = "minute") ~ lubridate::today(),
+          stringr::str_detect(value, pattern = "hour") ~ lubridate::today(),
+          stringr::str_detect(value, pattern = "Today") ~ lubridate::today(),
+          stringr::str_detect(value, pattern = "Yesterday") ~ lubridate::today()-1,
+          TRUE ~ value
         )
     )
 
