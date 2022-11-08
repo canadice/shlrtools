@@ -895,7 +895,7 @@ userScraper <- function(link){
           stringr::str_detect(value, pattern = "hour") ~ lubridate::today(),
           stringr::str_detect(value, pattern = "Today") ~ lubridate::today(),
           stringr::str_detect(value, pattern = "Yesterday") ~ lubridate::today()-1,
-          TRUE ~ value
+          TRUE ~ lubridate::as_date(value)
         )
     )
 
