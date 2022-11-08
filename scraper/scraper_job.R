@@ -67,7 +67,7 @@ draftedProspects <-
 data <-
   scraper()
 
-
+warnings()
 
 data <-
   data[which(lapply(data, is.data.frame) %>% unlist())] %>%
@@ -182,7 +182,7 @@ forumData <-
          Jersey.Nr. = as.numeric(stringr::str_remove_all(Jersey.Nr., pattern = "[^0-9]"))
   )
 
-warnings()
+
 
 save(
   forumData,
