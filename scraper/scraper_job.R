@@ -67,7 +67,6 @@ draftedProspects <-
 data <-
   scraper()
 
-warnings()
 
 data <-
   data[which(lapply(data, is.data.frame) %>% unlist())] %>%
