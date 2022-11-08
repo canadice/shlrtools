@@ -182,6 +182,8 @@ forumData <-
          Jersey.Nr. = as.numeric(stringr::str_remove_all(Jersey.Nr., pattern = "[^0-9]"))
   )
 
+warnings()
+
 save(
   forumData,
   file = "data/forumData.RData"
