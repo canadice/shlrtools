@@ -217,7 +217,7 @@ scraper <- function(parallell = FALSE){
 
     playerData <-
       lapply(
-        X = playerLinks,
+        X = playerLinks[1:50],
         FUN = function(x){
           scrape <- try(shlrtools::playerScraper(x), silent=TRUE)
 
