@@ -1035,7 +1035,7 @@ userScraper <- function(link){
 
     ## Checks if a user is considered IA (30 days of not posting)
     dplyr::mutate(
-      `Last Post` = lastPost %>% unlist() %>% lubridate::as_date(),
+      `Last Post` = lastPost %>% unlist() %>% lubridate::as_date(format = "%m-%d-%Y"),
       Active =
         dplyr::case_when(
           lubridate::today() - (lastPost %>% unlist()) > 30 ~ "IA",
