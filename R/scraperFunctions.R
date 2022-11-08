@@ -899,6 +899,8 @@ userScraper <- function(link){
         )
     )
 
+  print(lastPost)
+
 
   ### Reads table information
   table <-
