@@ -895,7 +895,7 @@ userScraper <- function(link){
           stringr::str_detect(value, pattern = "hour") ~ lubridate::today(),
           stringr::str_detect(value, pattern = "Today") ~ lubridate::today(),
           stringr::str_detect(value, pattern = "Yesterday") ~ lubridate::today()-1,
-          TRUE ~ value %>% stringr::str_extract(pattern = "[0-9]+-[0-9]+-[0-9]+") %>% lubridate::as_date(format = "mdY")
+          TRUE ~ value %>% stringr::str_extract(pattern = "[0-9]+-[0-9]+-[0-9]+") %>% lubridate::as_date(format = "%m-%d-%Y")
         )
     )
 
@@ -944,7 +944,9 @@ userScraper <- function(link){
           stringr::str_detect(`Last Visit`, pattern = "hour") ~ lubridate::today(),
           stringr::str_detect(`Last Visit`, pattern = "Today") ~ lubridate::today(),
           stringr::str_detect(`Last Visit`, pattern = "Yesterday") ~ lubridate::today()-1,
-          TRUE ~ lubridate::as_date(`Last Visit`, format = "%m-%d-%Y")
+          TRUE ~`Last Visit` %>%
+            stringr::str_extract(pattern = "[0-9]+-[0-9]+-[0-9]+") %>%
+            lubridate::as_date(`Last Visit`, format = "%m-%d-%Y")
         ),
       Joined =
         dplyr::case_when(
@@ -1037,7 +1039,7 @@ userScraper <- function(link){
 
     ## Checks if a user is considered IA (30 days of not posting)
     dplyr::mutate(
-      `Last Post` = lastPost %>% unlist() %>% lubridate::as_date(),
+      # `Last Post` = lastPost %>% unlist() %>% lubridate::as_date(),
       Active =
         dplyr::case_when(
           lubridate::today() - (lastPost %>% unlist()) > 30 ~ "IA",
