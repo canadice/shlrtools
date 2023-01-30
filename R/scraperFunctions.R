@@ -895,7 +895,15 @@ userScraper <- function(link){
           stringr::str_detect(value, pattern = "hour") ~ lubridate::today(),
           stringr::str_detect(value, pattern = "Today") ~ lubridate::today(),
           stringr::str_detect(value, pattern = "Yesterday") ~ lubridate::today()-1,
-          TRUE ~ value %>% stringr::str_extract(pattern = "[0-9]+-[0-9]+-[0-9]+") %>% lubridate::as_date(format = "%m-%d-%Y")
+          TRUE ~ value %>%
+            stringr::str_extract(pattern = "[0-9]+-[0-9]+-[0-9]+") %>%
+            {
+              if(packageVersion("lubridate") == '1.9.0') {
+                lubridate::as_date(., format = "mdY")
+              } else {
+                lubridate::as_date(., format = "%m-%d-%Y")
+              }
+            }
         )
     )
 
@@ -946,7 +954,13 @@ userScraper <- function(link){
           stringr::str_detect(`Last Visit`, pattern = "Yesterday") ~ lubridate::today()-1,
           TRUE ~`Last Visit` %>%
             stringr::str_extract(pattern = "[0-9]+-[0-9]+-[0-9]+") %>%
-            lubridate::as_date(`Last Visit`, format = "%m-%d-%Y")
+            {
+              if(packageVersion("lubridate") == '1.9.0') {
+                lubridate::as_date(., format = "mdY")
+              } else {
+                lubridate::as_date(., format = "%m-%d-%Y")
+              }
+            }
         ),
       Joined =
         dplyr::case_when(
@@ -954,7 +968,14 @@ userScraper <- function(link){
           stringr::str_detect(`Joined`, pattern = "hour") ~ lubridate::today(),
           stringr::str_detect(`Joined`, pattern = "Today") ~ lubridate::today(),
           stringr::str_detect(`Joined`, pattern = "Yesterday") ~ lubridate::today()-1,
-          TRUE ~ lubridate::as_date(`Joined`, format = "%m-%d-%Y")
+          TRUE ~ `Joined` %>%
+            {
+              if(packageVersion("lubridate") == '1.9.0') {
+                lubridate::as_date(., format = "mdY")
+              } else {
+                lubridate::as_date(., format = "%m-%d-%Y")
+              }
+            }
         ),
       `Online For` =
         sapply(
