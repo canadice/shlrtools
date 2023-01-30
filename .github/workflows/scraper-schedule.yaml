@@ -54,6 +54,9 @@ jobs:
         run: |
           remotes::install_github("Canadice/shlrtools")
           remotes::install_deps(dependencies = TRUE)
+          utils::packageVersion("lubridate")
+          install.packages("https://cran.r-project.org/src/contrib/Archive/lubridate/lubridate_1.8.0.tar.gz")
+          utils::packageVersion("lubridate")
         shell: Rscript {0}
 
       - name: Run the scraper
