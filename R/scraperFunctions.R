@@ -196,13 +196,17 @@ playerScraper <-
     if(length(title) == 2){
       NAME <-
         title %>%
-        dplyr::nth(2)
+        .[2]
+        # ## Changes in dplyr 1.1.0
+        # dplyr::nth(2)
 
       CLASS <-
         title %>%
         stringr::str_extract_all(pattern = "S[0-9]+") %>%
         unlist() %>%
-        dplyr::nth(1)
+        .[1]
+        # ## Changes in dplyr 1.1.0
+        # dplyr::nth(1)
 
       if(length(CLASS)==0){
         CLASS <- "Unspecified"
@@ -214,18 +218,24 @@ playerScraper <-
         stringr::str_split(pattern = "]|\\)") %>%
         unlist() %>%
         stringr::str_squish() %>%
-        dplyr::nth(2)
+        .[2]
+        # ## Changes in dplyr 1.1.0
+        # dplyr::nth(2)
 
     } else if(length(title) == 3){
       NAME <-
         title %>%
-        dplyr::nth(3)
+        .[3]
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(3)
 
       CLASS <-
         title %>%
         stringr::str_extract_all(pattern = "S[0-9]+") %>%
         unlist() %>%
-        dplyr::nth(1)
+        .[1]
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(1)
 
       if(length(CLASS)==0){
         CLASS <- "Unspecified"
@@ -233,7 +243,9 @@ playerScraper <-
 
       POSITION <-
         title %>%
-        dplyr::nth(2)
+        .[2]
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(2)
 
     } else {
       ## If something is wrong with the title splits, return NA for each of these.
@@ -264,7 +276,9 @@ playerScraper <-
     TPE <-
       topic %>%
       rvest::html_nodes("small") %>%
-      dplyr::nth(1) %>%
+      .[1] %>%
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(1) %>%
       rvest::html_text() %>%
       stringr::str_extract_all(pattern = "[0-9]+") %>%
       unlist() %>%
@@ -300,12 +314,16 @@ playerScraper <-
     USER <-
       topic %>%
       rvest::html_nodes(".profile-username") %>%
-      dplyr::nth(1) %>%
+      .[1] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(1) %>%
       rvest::html_text() %>%
       stringr::str_split("\n") %>%
       unlist() %>%
       ## Usually the user name starts with a \n so the second cell holds the user info
-      dplyr::nth(2) %>%
+      .[2] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(2) %>%
       stringr::str_remove(
         pattern = userTags
       )
@@ -313,7 +331,9 @@ playerScraper <-
     USERLINK <-
       topic %>%
       rvest::html_nodes(".profile-username") %>%
-      dplyr::nth(1) %>%
+      .[1] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(1) %>%
       rvest::html_nodes(xpath = "./a") %>%
       rvest::html_attr("href")
 
@@ -324,7 +344,9 @@ playerScraper <-
     USERDATA <-
       topic %>%
       rvest::html_nodes("#mainwidth2") %>%
-      dplyr::nth(1) %>%
+      .[1] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(1) %>%
       rvest::html_nodes(".float_right") %>%
       rvest::html_text() %>%
       stringr::str_squish() %>%
@@ -341,7 +363,9 @@ playerScraper <-
           rvest::html_nodes(".navigation") %>%
           rvest::html_text() %>%
           stringr::str_squish() %>%
-          dplyr::nth(1) %>%
+          .[1] %>%
+          # ## Changes in dplyr 1.1.0
+          # dplyr::nth(1) %>%
           stringr::str_detect(
             ## Takes team information from a separate data set
             pattern = teamInfo$team
@@ -365,7 +389,9 @@ playerScraper <-
     postData <-
       topic %>%
       rvest::html_nodes("div#two") %>%
-      dplyr::nth(1) %>%
+      .[1] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(1) %>%
       rvest::html_nodes(".post_body")
 
     ### Checks if information is written in special fonts
@@ -394,55 +420,73 @@ playerScraper <-
       postData %>%
       stringr::str_match(pattern = "First Name:(.*?)\\n") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,2]
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(2)
 
     LASTNAME <-
       postData %>%
       stringr::str_match(pattern = "Last Name:(.*?)\\n") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,2]
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(2)
 
     HANDEDNESS <-
       postData %>%
       stringr::str_match(pattern = "(Shoots|Hand[A-z]+):(.*?)\\n") %>%
       unlist() %>%
-      dplyr::last()
+      .[,ncol(.)]
+    # ## Changes in dplyr 1.1.0
+    # dplyr::last()
 
     RECRUITEDBY <-
       postData %>%
       stringr::str_match(pattern = "Recruited[A-z ]+:(.*?)\\n") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,ncol(.)]
+    # ## Changes in dplyr 1.1.0
+    # dplyr::last()
 
     HEIGHT <-
       postData %>%
       stringr::str_match(pattern = "Height:(.*?)\\n") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,2]
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(2)
 
     WEIGHT <-
       postData %>%
       stringr::str_match(pattern = "Weight:(.*?)\\n") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,2]
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(2)
 
     RENDER <-
       postData %>%
       stringr::str_match(pattern = "Player Render:(.*?)\\n") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,2]
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(2)
 
     JERSEYNR <-
       postData %>%
       stringr::str_match(pattern = "Jersey[A-z ]+:(.*?)\\n") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,2]
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(2)
 
     BIRTHPLACE <-
       postData %>%
       stringr::str_match(pattern = "Birth[A-z]+:(.*?)(\\n|Player)") %>%
       unlist() %>%
-      dplyr::nth(2)
+      .[,2]
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(2)
 
     PLAYERINFO <-
       cbind(
@@ -479,9 +523,13 @@ playerScraper <-
       ATTRIBUTES <-
         postData %>%
         stringr::str_split("Blocker", simplify = TRUE) %>%
-        dplyr::nth(2) %>%
+        .[,2] %>%
+        # ## Changes in dplyr 1.1.0
+        # dplyr::nth(2) %>%
         stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
-        dplyr::nth(1) %>%
+        .[,1] %>%
+        # ## Changes in dplyr 1.1.0
+        # dplyr::nth(1) %>%
         stringr::str_remove_all("Goalie Ratings|Mental Ratings") %>%
         stringr::str_split(":|\\n+", simplify = TRUE) %>%
         c(., "15") %>%
@@ -506,9 +554,13 @@ playerScraper <-
       ATTRIBUTES <-
         postData %>%
         stringr::str_split("Screening", simplify = TRUE) %>%
-        dplyr::nth(2) %>%
+        .[,2] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(2) %>%
         stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
-        dplyr::nth(1) %>%
+        .[,1] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(2) %>%
         stringr::str_remove_all("Defensive Ratings|Mental Ratings|Physical Ratings") %>%
         stringr::str_split(":|\\n+", simplify = TRUE) %>%
         c(., "15") %>%
@@ -858,7 +910,9 @@ userScraper <- function(link){
 
     ## Finds link to all posts
     rvest::html_elements("a.button") %>%
-    dplyr::nth(2) %>%
+    .[2] %>%
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(2) %>%
     rvest::html_attr("href")
 
   if(lastPost == "#"){
@@ -869,7 +923,9 @@ userScraper <- function(link){
 
       ## Finds link to all posts
       rvest::html_elements("a.button") %>%
-      dplyr::nth(2) %>%
+      .[2] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(2) %>%
       rvest::html_attr("href")
   }
 
@@ -883,7 +939,9 @@ userScraper <- function(link){
     ## Reads the information from the search results
     xml2::read_html() %>%
     rvest::html_elements("td.hide span") %>%
-    dplyr::nth(5) %>%
+    .[5] %>%
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(5) %>%
 
     ## Finds date of the last post and converts it to date format
     rvest::html_text() %>%
@@ -918,14 +976,18 @@ userScraper <- function(link){
     rvest::html_elements("div#two table.tborder") %>%
 
     ## Selects the second table in the list
-    dplyr::nth(1) %>%
+    .[1] %>%
+    # ## Changes in dplyr 1.1.0
+    # dplyr::nth(1) %>%
 
     ## Converts it (wrong) to a data.frame
     rvest::html_table() %>%
 
+    .[[1]] %>%
+
     ## Data wrangling to get it to correct format
     dplyr::slice(-1) %>%
-    dplyr::select(.data$X1) %>%
+    dplyr::select("X1") %>%
     unlist() %>%
 
     ## Splits headers from values, looks for either : followed by info or : at the end of string

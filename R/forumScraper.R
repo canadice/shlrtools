@@ -219,17 +219,16 @@ scraper <- function(parallell = FALSE){
       lapply(
         X = playerLinks,
         FUN = function(x){
-          scrape <- try(shlrtools::playerScraper(x), silent=TRUE)
+          scrape <- tryCatch(shlrtools::playerScraper(x), error = function(e) paste(x, "produces this error: ", e))
 
           if(
-            inherits(
-              scrape,
-              "try-error")
+            !is.data.frame(scrape)
           ){
             print(x)
           }
           else {
-            scrape
+            print("OK")
+            return(scrape)
           }
         }
       ) %>%
