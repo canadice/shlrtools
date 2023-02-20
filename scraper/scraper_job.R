@@ -83,6 +83,9 @@ forumData <-
   # select(-Weight, -Height, -Position, -(Player.Type:last_col())) %>%
   left_join(
     iihfTransfer %>%
+      mutate(
+        `Transfer Season` = unlist(`Transfer Season`)
+      ) %>%
       group_by(player) %>%
       dplyr::filter(
         `Transfer Season` == max(`Transfer Season`)

@@ -670,7 +670,7 @@ playerScraper <-
               stringr::str_detect(Birthplace, pattern = "USA|United States|Michigan|NY|N.Y.|Georgia") ~ "USA",
               stringr::str_detect(Birthplace, pattern = "Finland") ~ "Finland",
               stringr::str_detect(Birthplace, pattern = "Russia") ~ "Russia",
-              stringr::str_detect(Birthplace, pattern = "Austria") ~ "Austria",
+              # stringr::str_detect(Birthplace, pattern = "Austria") ~ "Austria",
               stringr::str_detect(Birthplace, pattern = "Czechia|Czech Republic|CZE|Czechoslovakia") ~ "Czechia",
               stringr::str_detect(Birthplace, pattern = "Germany") ~ "Germany",
               stringr::str_detect(Birthplace, pattern = "England|Wales|Scotland|Northern Ireland|United Kingdom|Great Britain") ~ "Great Britain",
@@ -679,6 +679,7 @@ playerScraper <-
               stringr::str_detect(Birthplace, pattern = "Latvia") ~ "Latvia",
               stringr::str_detect(Birthplace, pattern = "Norway") ~ "Norway",
               stringr::str_detect(Birthplace, pattern = "Switzerland") ~ "Switzerland",
+              stringr::str_detect(Birthplace, pattern = "France") ~ "France",
               TRUE ~ "Unassigned"
             )
           } else {
