@@ -237,7 +237,7 @@ teamLoader <-  function(leagueID, season = NULL){
 #' # Loads the SHL schedule from season 64
 #' gamesLoader(leagueID = 0, season = 64, type = "regular")
 #'
-gamesLoader <- function(leagueID, season = NULL, type = NULL){
+gamesLoader <- function(leagueID, season = NULL, type = "regular"){
   if(type == "playoffs"){
     schedule <-
       readAPI(
