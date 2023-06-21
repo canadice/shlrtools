@@ -191,7 +191,26 @@ save(
 write.csv(forumData, file = "data/forumData.csv", row.names = FALSE)
 
 forumData %>%
-  select(
+  dplyr::select(
+    USERLINK,
+    NAME,
+    POSITION,
+    Handedness,
+    Recruited.By,
+    Player.Render,
+    Jersey.Nr.,
+    Height,
+    Weight,
+    Birthplace,
+    CLASS,
+    league,
+    fhmID,
+    SHL.Team,
+    IIHF.Nation,
+    TPE,
+    Screening:Goalie.Stamina
+  ) %>%
+  dplyr::rename(
     user = USERLINK,
     name = NAME,
     position = POSITION,
@@ -207,8 +226,7 @@ forumData %>%
     teamID = fhmID,
     shlRightsTeamID = SHL.Team,
     iihfNation = IIHF.Nation,
-    tpeTotal = TPE,
-    Screening:Goalie.Stamina
+    tpeTotal = TPE
   ) %>%
   write.csv(forumData, file = "data/forumDataImport.csv", row.names = FALSE)
 

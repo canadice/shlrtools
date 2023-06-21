@@ -227,7 +227,7 @@ scraper <- function(parallell = FALSE){
             print(x)
           }
           else {
-            print("OK")
+            # print("OK")
             return(scrape)
           }
         }
