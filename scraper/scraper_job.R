@@ -108,10 +108,7 @@ forumData <-
   ) %>%
   mutate(
     SHL.Team =
-      case_when(
-        !is.na(Rights) & SHL.Team != Rights ~ Rights,
-        TRUE ~ SHL.Team
-      )
+      Rights
   ) %>%
   select(-Rights) %>%
   ## Create a "clean name" variable without special characters
@@ -192,5 +189,29 @@ save(
 )
 
 write.csv(forumData, file = "data/forumData.csv", row.names = FALSE)
+
+forumData %>%
+  select(
+    user = USERLINK,
+    name = Name,
+    position = POSITION,
+    handedness = Handedness,
+    recruiter = Recruited.By,
+    render = Player.Render,
+    jerseyNumber = Jersey.Nr.,
+    height = Height,
+    weight = Weight,
+    birthplace = Birthplace,
+    season = CLASS,
+    currentLeague = league,
+    teamID = fhmID,
+    shlRightsTeamID = SHL.Team,
+    iihfNation = IIHF.Nation,
+    tpeTotal = TPE,
+    Screening:Goalie.Stamina
+  ) %>%
+  write.csv(forumData, file = "data/forumDataImport.csv", row.names = FALSE)
+
+
 
 
