@@ -189,47 +189,47 @@ save(
 )
 
 write.csv(forumData, file = "data/forumData.csv", row.names = FALSE)
-
-forumData %>%
-  dplyr::select(
-    USERLINK,
-    NAME,
-    POSITION,
-    Handedness,
-    Recruited.By,
-    Player.Render,
-    Jersey.Nr.,
-    Height,
-    Weight,
-    Birthplace,
-    CLASS,
-    league,
-    fhmID,
-    SHL.Team,
-    IIHF.Nation,
-    TPE,
-    Screening:Goalie.Stamina
-  ) %>%
-  dplyr::rename(
-    user = USERLINK,
-    name = NAME,
-    position = POSITION,
-    handedness = Handedness,
-    recruiter = Recruited.By,
-    render = Player.Render,
-    jerseyNumber = Jersey.Nr.,
-    height = Height,
-    weight = Weight,
-    birthplace = Birthplace,
-    season = CLASS,
-    currentLeague = league,
-    teamID = fhmID,
-    shlRightsTeamID = SHL.Team,
-    iihfNation = IIHF.Nation,
-    tpeTotal = TPE
-  ) %>%
-  write.csv(forumData, file = "data/forumDataImport.csv", row.names = FALSE)
-
+#
+# forumData %>%
+#   dplyr::select(
+#     USERLINK,
+#     NAME,
+#     POSITION,
+#     Handedness,
+#     Recruited.By,
+#     Player.Render,
+#     Jersey.Nr.,
+#     Height,
+#     Weight,
+#     Birthplace,
+#     CLASS,
+#     league,
+#     fhmID,
+#     SHL.Team,
+#     IIHF.Nation,
+#     TPE,
+#     Screening:Goalie.Stamina
+#   ) %>%
+#   dplyr::rename(
+#     user = USERLINK,
+#     name = NAME,
+#     position = POSITION,
+#     handedness = Handedness,
+#     recruiter = Recruited.By,
+#     render = Player.Render,
+#     jerseyNumber = Jersey.Nr.,
+#     height = Height,
+#     weight = Weight,
+#     birthplace = Birthplace,
+#     season = CLASS,
+#     currentLeague = league,
+#     teamID = fhmID,
+#     shlRightsTeamID = SHL.Team,
+#     iihfNation = IIHF.Nation,
+#     tpeTotal = TPE
+#   ) %>%
+#   write.csv(forumData, file = "data/forumDataImport.csv", row.names = FALSE)
+#
 
 
 
