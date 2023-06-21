@@ -193,7 +193,7 @@ write.csv(forumData, file = "data/forumData.csv", row.names = FALSE)
 forumData %>%
   select(
     user = USERLINK,
-    name = Name,
+    name = NAME,
     position = POSITION,
     handedness = Handedness,
     recruiter = Recruited.By,
