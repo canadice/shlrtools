@@ -241,7 +241,13 @@ forumData %>%
     by = c("shlRightsTeamID" = "team")
   ) %>%
   mutate(
-    shlRightsTeamID = fhmID %>% as.character() %>% tidyr::replace_na(replace = "")
+    shlRightsTeamID = fhmID %>% as.character() %>% tidyr::replace_na(replace = ""),
+    across(
+      c(currentLeague, teamID, Screening:Goalie.Stamina),
+      ~ .x %>%
+        as.character() %>%
+        tidyr::replace_na(replace = "")
+    )
   ) %>%
   select(
     -fhmID
