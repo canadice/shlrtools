@@ -241,10 +241,10 @@ forumData %>%
     by = c("shlRightsTeamID" = "team")
   ) %>%
   mutate(
-    shlRightsTeamID = fhmID
+    shlRightsTeamID = fhmID %>% tidyr::replace_na(replace = "")
   ) %>%
   select(
-    -fhmID, -team
+    -fhmID
   ) %>%
   write.csv(file = "data/forumDataImport.csv", row.names = FALSE)
 
