@@ -241,7 +241,7 @@ forumData %>%
     by = c("shlRightsTeamID" = "team")
   ) %>%
   mutate(
-    shlRightsTeamID = fhmID %>% tidyr::replace_na(replace = "")
+    shlRightsTeamID = fhmID %>% as.character() %>% tidyr::replace_na(replace = "")
   ) %>%
   select(
     -fhmID
