@@ -228,6 +228,10 @@ forumData %>%
     iihfNation = IIHF.Nation,
     tpeTotal = TPE
   ) %>%
+  mutate(
+    user = user %>% stringr::str_extract_all(pattern = "[0-9]+", simplify = TRUE),
+    season = season %>% stringr::str_extract_all(pattern = "[0-9]+", simplify = TRUE)
+  ) %>%
   write.csv(file = "data/forumDataImport.csv", row.names = FALSE)
 
 
