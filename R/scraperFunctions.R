@@ -185,74 +185,74 @@ playerScraper <-
     topic <- xml2::read_html(player)
 
     ###  Reading the player information from topic title
-    title <-
+    CLASS <-
       topic %>%
-      rvest::html_nodes("title") %>%
+      rvest::html_elements("title") %>%
       rvest::html_text() %>%
-      stringr::str_split(pattern = " - |- ") %>%
-      unlist() %>%
-      stringr::str_squish()
+      stringr::str_extract_all(pattern = "S[0-9]+", simplify = TRUE) %>%
+      c()
 
-    if(length(title) == 2){
-      NAME <-
-        title %>%
-        .[2]
-        # ## Changes in dplyr 1.1.0
-        # dplyr::nth(2)
-
-      CLASS <-
-        title %>%
-        stringr::str_extract_all(pattern = "S[0-9]+") %>%
-        unlist() %>%
-        .[1]
-        # ## Changes in dplyr 1.1.0
-        # dplyr::nth(1)
-
-      if(length(CLASS)==0){
-        CLASS <- "Unspecified"
-      }
-
-      POSITION <-
-        title %>%
-        dplyr::nth(1) %>%
-        stringr::str_split(pattern = "]|\\)") %>%
-        unlist() %>%
-        stringr::str_squish() %>%
-        .[2]
-        # ## Changes in dplyr 1.1.0
-        # dplyr::nth(2)
-
-    } else if(length(title) == 3){
-      NAME <-
-        title %>%
-        .[3]
-      # ## Changes in dplyr 1.1.0
-      # dplyr::nth(3)
-
-      CLASS <-
-        title %>%
-        stringr::str_extract_all(pattern = "S[0-9]+") %>%
-        unlist() %>%
-        .[1]
-      # ## Changes in dplyr 1.1.0
-      # dplyr::nth(1)
-
-      if(length(CLASS)==0){
-        CLASS <- "Unspecified"
-      }
-
-      POSITION <-
-        title %>%
-        .[2]
-      # ## Changes in dplyr 1.1.0
-      # dplyr::nth(2)
-
-    } else {
-      ## If something is wrong with the title splits, return NA for each of these.
-      NAME <- NA
-      CLASS <- NA
-      POSITION <- NA
-    }
+    #
+    # if(length(title) == 2){
+    #   NAME <-
+    #     title %>%
+    #     .[2]
+    #     # ## Changes in dplyr 1.1.0
+    #     # dplyr::nth(2)
+    #
+    #   CLASS <-
+    #     title %>%
+    #     stringr::str_extract_all(pattern = "S[0-9]+") %>%
+    #     unlist() %>%
+    #     .[1]
+    #     # ## Changes in dplyr 1.1.0
+    #     # dplyr::nth(1)
+    #
+    #   if(length(CLASS)==0){
+    #     CLASS <- "Unspecified"
+    #   }
+    #
+    #   POSITION <-
+    #     title %>%
+    #     dplyr::nth(1) %>%
+    #     stringr::str_split(pattern = "]|\\)") %>%
+    #     unlist() %>%
+    #     stringr::str_squish() %>%
+    #     .[2]
+    #     # ## Changes in dplyr 1.1.0
+    #     # dplyr::nth(2)
+    #
+    # } else if(length(title) == 3){
+    #   NAME <-
+    #     title %>%
+    #     .[3]
+    #   # ## Changes in dplyr 1.1.0
+    #   # dplyr::nth(3)
+    #
+    #   CLASS <-
+    #     title %>%
+    #     stringr::str_extract_all(pattern = "S[0-9]+") %>%
+    #     unlist() %>%
+    #     .[1]
+    #   # ## Changes in dplyr 1.1.0
+    #   # dplyr::nth(1)
+    #
+    #   if(length(CLASS)==0){
+    #     CLASS <- "Unspecified"
+    #   }
+    #
+    #   POSITION <-
+    #     title %>%
+    #     .[2]
+    #   # ## Changes in dplyr 1.1.0
+    #   # dplyr::nth(2)
+    #
+    # } else {
+    #   ## If something is wrong with the title splits, return NA for each of these.
+    #   NAME <- NA
+    #   CLASS <- NA
+    #   POSITION <- NA
+    # }
 
     # ### Checks if the name includes a nickname
     # if(NAME %>% is.na()){
@@ -288,30 +288,44 @@ playerScraper <-
       TPE = NA
     }
 
-
-    ###  Extract user information
-
-    ## Specifies the user defined tags that will be removed from the user name
-    userTags <-
-      paste0(
-        "SHL Commissioner|SHL GM|SHL HO|Co-Commissioner|Commissioner|",
-        "SMJHL Intern|SMJHL GM|SMJHL HO|SMJHL Commissioner|",
-        "IIHF Commissioner|IIHF Federation Head|WJC Commissioner|",
-        "SMJHL All-Star Committee|SHL All-Star Committee|HOF Committee|",
-        "SMJHL Awards Committee|SHL Awards Committee|Awards Committee|",
-        "Rookie Mentor Committee|Appeals Committee|All-Star Committee|",
-        "Registered|Rookie|Historian|Recruitment Team|Deep Dives Head|",
-
-        paste(teamInfo$team, collapse = "|"),"|","Team [A-z ]+|",
-
-        "Head Office|Coach|Budget Director|Graphic Graders|Moderators|",
-        "Player Updaters|PGS Grader|Player Progression Director|",
-        "Fantasy League Manager|Simmer|Head Updater|Deep Dive Head|",
-        "Owner|Media Graders|Bank Manager|Mentor|",
-        "Site Management|Trading Card Team|Trading Card Admins"
+    CREATED <-
+      topic %>%
+      rvest::html_elements(".post_date") %>%
+      .[1] %>%
+      rvest::html_text2() %>%
+      as_tibble() %>%
+      mutate(
+        value =
+          dplyr::case_when(
+            stringr::str_detect(value, pattern = "minute") ~ lubridate::today(),
+            stringr::str_detect(value, pattern = "hour") ~ lubridate::today(),
+            stringr::str_detect(value, pattern = "Today") ~ lubridate::today(),
+            stringr::str_detect(value, pattern = "Yesterday") ~ lubridate::today()-1,
+            TRUE ~ value %>%
+              stringr::str_extract(pattern = "[0-9]+-[0-9]+-[0-9]+") %>%
+              {
+                if(packageVersion("lubridate") == '1.9.0') {
+                  lubridate::as_date(., format = "mdY")
+                } else {
+                  lubridate::as_date(., format = "%m-%d-%Y")
+                }
+              }
+          )
+      ) %>%
+      rename(
+        CREATED = value
       )
 
+    ###  Extract user information
     USER <-
+      topic %>%
+      rvest::html_nodes(".profile-username a") %>%
+      .[1] %>%
+      # ## Changes in dplyr 1.1.0
+      # dplyr::nth(1) %>%
+      rvest::html_text()
+
+    USERTAG <-
       topic %>%
       rvest::html_nodes(".profile-username") %>%
       .[1] %>%
@@ -325,7 +339,7 @@ playerScraper <-
       # ## Changes in dplyr 1.1.0
       # dplyr::nth(2) %>%
       stringr::str_remove(
-        pattern = userTags
+        pattern = USER
       )
 
     USERLINK <-
@@ -416,175 +430,197 @@ playerScraper <-
         rvest::html_text2()
     }
 
-    FIRSTNAME <-
-      postData %>%
-      stringr::str_match(pattern = "First Name:(.*?)\\n") %>%
-      unlist() %>%
-      .[,2]
-      # ## Changes in dplyr 1.1.0
-      # dplyr::nth(2)
-
-    LASTNAME <-
-      postData %>%
-      stringr::str_match(pattern = "Last Name:(.*?)\\n") %>%
-      unlist() %>%
-      .[,2]
-      # ## Changes in dplyr 1.1.0
-      # dplyr::nth(2)
-
-    HANDEDNESS <-
-      postData %>%
-      stringr::str_match(pattern = "(Shoots|Hand[A-z]+):(.*?)\\n") %>%
-      unlist() %>%
-      .[,ncol(.)]
-    # ## Changes in dplyr 1.1.0
-    # dplyr::last()
-
-    RECRUITEDBY <-
-      postData %>%
-      stringr::str_match(pattern = "Recruited[A-z ]+:(.*?)\\n") %>%
-      unlist() %>%
-      .[,ncol(.)]
-    # ## Changes in dplyr 1.1.0
-    # dplyr::last()
-
-    HEIGHT <-
-      postData %>%
-      stringr::str_match(pattern = "Height:(.*?)\\n") %>%
-      unlist() %>%
-      .[,2]
-    # ## Changes in dplyr 1.1.0
-    # dplyr::nth(2)
-
-    WEIGHT <-
-      postData %>%
-      stringr::str_match(pattern = "Weight:(.*?)\\n") %>%
-      unlist() %>%
-      .[,2]
-    # ## Changes in dplyr 1.1.0
-    # dplyr::nth(2)
-
-    RENDER <-
-      postData %>%
-      stringr::str_match(pattern = "Player Render:(.*?)\\n") %>%
-      unlist() %>%
-      .[,2]
-    # ## Changes in dplyr 1.1.0
-    # dplyr::nth(2)
-
-    JERSEYNR <-
-      postData %>%
-      stringr::str_match(pattern = "Jersey[A-z ]+:(.*?)\\n") %>%
-      unlist() %>%
-      .[,2]
-    # ## Changes in dplyr 1.1.0
-    # dplyr::nth(2)
-
-    BIRTHPLACE <-
-      postData %>%
-      stringr::str_match(pattern = "Birth[A-z]+:(.*?)(\\n|Player)") %>%
-      unlist() %>%
-      .[,2]
-    # ## Changes in dplyr 1.1.0
-    # dplyr::nth(2)
-
+    ### Extracts the player information
     PLAYERINFO <-
-      cbind(
-        FIRSTNAME,
-        LASTNAME,
-        HANDEDNESS,
-        JERSEYNR,
-        RECRUITEDBY,
-        RENDER,
-        BIRTHPLACE,
-        HEIGHT,
-        WEIGHT
+      postData %>%
+      stringr::str_split(pattern = "\\n", simplify = TRUE) %>%
+      .[1:(stringr::str_detect(., pattern = "Professionalism") %>% which())] %>%
+      .[stringr::str_detect(., pattern = ":")] %>%
+      stringr::str_split(pattern = ":(?!/)", simplify = TRUE) %>%
+      matrix(ncol = 2) %>%
+      data.frame() %>%
+      dplyr::mutate(
+        X2 = stringr::str_squish(X2)
       ) %>%
-      stringr::str_trim() %>%
-      t() %>%
-      as.data.frame()
-
-    colnames(PLAYERINFO) <-
-      c(
-        "First Name",
-        "Last Name",
-        "Handedness",
-        "Jersey Nr.",
-        "Recruited By",
-        "Player Render",
-        "Birthplace",
-        "Height",
-        "Weight"
+      tidyr::pivot_wider(
+        names_from = X1,
+        values_from = X2
       )
 
-
-    ### Player Attributes
-    if(stringr::str_detect(POSITION, "Goal")){
-      ATTRIBUTES <-
-        postData %>%
-        stringr::str_split("Blocker", simplify = TRUE) %>%
-        .[,2] %>%
-        # ## Changes in dplyr 1.1.0
-        # dplyr::nth(2) %>%
-        stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
-        .[,1] %>%
-        # ## Changes in dplyr 1.1.0
-        # dplyr::nth(1) %>%
-        stringr::str_remove_all("Goalie Ratings|Mental Ratings") %>%
-        stringr::str_split(":|\\n+", simplify = TRUE) %>%
-        c(., "15") %>%
-        stringr::str_squish() %>%
-        matrix(ncol = 2, byrow = TRUE) %>%
-        t() %>%
-        data.frame()
-
-      colnames(ATTRIBUTES) <- ATTRIBUTES[1,]
-      colnames(ATTRIBUTES)[1] <- "Blocker"
-      colnames(ATTRIBUTES)[length(colnames(ATTRIBUTES))] <- "*Professionalism"
-
-      ATTRIBUTES <-
-        ATTRIBUTES[-1,] %>%
-        dplyr::mutate(
-          dplyr::across(
-            dplyr::everything(),
-            as.numeric
-          )
-        )
-    } else {
-      ATTRIBUTES <-
-        postData %>%
-        stringr::str_split("Screening", simplify = TRUE) %>%
-        .[,2] %>%
-      # ## Changes in dplyr 1.1.0
-      # dplyr::nth(2) %>%
-        stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
-        .[,1] %>%
-      # ## Changes in dplyr 1.1.0
-      # dplyr::nth(2) %>%
-        stringr::str_remove_all("Defensive Ratings|Mental Ratings|Physical Ratings") %>%
-        stringr::str_split(":|\\n+", simplify = TRUE) %>%
-        c(., "15") %>%
-        stringr::str_squish() %>%
-        matrix(ncol = 2, byrow = TRUE) %>%
-        t() %>%
-        data.frame()
-
-      ATTRIBUTES <-
-        ATTRIBUTES[,!apply(X = ATTRIBUTES, MARGIN = 2, FUN = function(x){sum(x == "")==2})]
-
-      colnames(ATTRIBUTES) <- ATTRIBUTES[1,]
-      colnames(ATTRIBUTES)[1] <- "Screening"
-      colnames(ATTRIBUTES)[length(colnames(ATTRIBUTES))] <- "*Professionalism"
-
-      ATTRIBUTES <-
-        ATTRIBUTES[-1,] %>%
-        dplyr::mutate(
-          dplyr::across(
-            dplyr::everything(),
-            as.numeric
-          )
-        )
-    }
+{    # #### Manual input of info ####
+    #
+    # FIRSTNAME <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "First Name:(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,2]
+    #   # ## Changes in dplyr 1.1.0
+    #   # dplyr::nth(2)
+    #
+    # LASTNAME <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "Last Name:(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,2]
+    #   # ## Changes in dplyr 1.1.0
+    #   # dplyr::nth(2)
+    #
+    # HANDEDNESS <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "(Shoots|Hand[A-z]+):(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,ncol(.)]
+    # # ## Changes in dplyr 1.1.0
+    # # dplyr::last()
+    #
+    # RECRUITEDBY <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "Recruited[A-z ]+:(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,ncol(.)]
+    # # ## Changes in dplyr 1.1.0
+    # # dplyr::last()
+    #
+    # HEIGHT <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "Height:(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,2]
+    # # ## Changes in dplyr 1.1.0
+    # # dplyr::nth(2)
+    #
+    # WEIGHT <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "Weight:(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,2]
+    # # ## Changes in dplyr 1.1.0
+    # # dplyr::nth(2)
+    #
+    # RENDER <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "Player Render:(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,2]
+    # # ## Changes in dplyr 1.1.0
+    # # dplyr::nth(2)
+    #
+    # JERSEYNR <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "Jersey[A-z ]+:(.*?)\\n") %>%
+    #   unlist() %>%
+    #   .[,2]
+    # # ## Changes in dplyr 1.1.0
+    # # dplyr::nth(2)
+    #
+    # BIRTHPLACE <-
+    #   postData %>%
+    #   stringr::str_match(pattern = "Birth[A-z]+:(.*?)(\\n|Player)") %>%
+    #   unlist() %>%
+    #   .[,2]
+    # # ## Changes in dplyr 1.1.0
+    # # dplyr::nth(2)
+    #
+    # PLAYERINFO <-
+    #   cbind(
+    #     FIRSTNAME,
+    #     LASTNAME,
+    #     HANDEDNESS,
+    #     JERSEYNR,
+    #     RECRUITEDBY,
+    #     RENDER,
+    #     BIRTHPLACE,
+    #     HEIGHT,
+    #     WEIGHT
+    #   ) %>%
+    #   stringr::str_trim() %>%
+    #   t() %>%
+    #   as.data.frame()
+    #
+    # colnames(PLAYERINFO) <-
+    #   c(
+    #     "First Name",
+    #     "Last Name",
+    #     "Handedness",
+    #     "Jersey Nr.",
+    #     "Recruited By",
+    #     "Player Render",
+    #     "Birthplace",
+    #     "Height",
+    #     "Weight"
+    #   )
+    #
+    #
+    # ### Player Attributes
+    # if(stringr::str_detect(POSITION, "Goal")){
+    #   ATTRIBUTES <-
+    #     postData %>%
+    #     stringr::str_split("Blocker", simplify = TRUE) %>%
+    #     .[,2] %>%
+    #     # ## Changes in dplyr 1.1.0
+    #     # dplyr::nth(2) %>%
+    #     stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
+    #     .[,1] %>%
+    #     # ## Changes in dplyr 1.1.0
+    #     # dplyr::nth(1) %>%
+    #     stringr::str_remove_all("Goalie Ratings|Mental Ratings") %>%
+    #     stringr::str_split(":|\\n+", simplify = TRUE) %>%
+    #     c(., "15") %>%
+    #     stringr::str_squish() %>%
+    #     matrix(ncol = 2, byrow = TRUE) %>%
+    #     t() %>%
+    #     data.frame()
+    #
+    #   colnames(ATTRIBUTES) <- ATTRIBUTES[1,]
+    #   colnames(ATTRIBUTES)[1] <- "Blocker"
+    #   colnames(ATTRIBUTES)[length(colnames(ATTRIBUTES))] <- "*Professionalism"
+    #
+    #   ATTRIBUTES <-
+    #     ATTRIBUTES[-1,] %>%
+    #     dplyr::mutate(
+    #       dplyr::across(
+    #         dplyr::everything(),
+    #         as.numeric
+    #       )
+    #     )
+    # } else {
+    #   ATTRIBUTES <-
+    #     postData %>%
+    #     stringr::str_split("Screening", simplify = TRUE) %>%
+    #     .[,2] %>%
+    #   # ## Changes in dplyr 1.1.0
+    #   # dplyr::nth(2) %>%
+    #     stringr::str_split("\\*Professionalism", simplify = TRUE) %>%
+    #     .[,1] %>%
+    #   # ## Changes in dplyr 1.1.0
+    #   # dplyr::nth(2) %>%
+    #     stringr::str_remove_all("Defensive Ratings|Mental Ratings|Physical Ratings") %>%
+    #     stringr::str_split(":|\\n+", simplify = TRUE) %>%
+    #     c(., "15") %>%
+    #     stringr::str_squish() %>%
+    #     matrix(ncol = 2, byrow = TRUE) %>%
+    #     t() %>%
+    #     data.frame()
+    #
+    #   ATTRIBUTES <-
+    #     ATTRIBUTES[,!apply(X = ATTRIBUTES, MARGIN = 2, FUN = function(x){sum(x == "")==2})]
+    #
+    #   colnames(ATTRIBUTES) <- ATTRIBUTES[1,]
+    #   colnames(ATTRIBUTES)[1] <- "Screening"
+    #   colnames(ATTRIBUTES)[length(colnames(ATTRIBUTES))] <- "*Professionalism"
+    #
+    #   ATTRIBUTES <-
+    #     ATTRIBUTES[-1,] %>%
+    #     dplyr::mutate(
+    #       dplyr::across(
+    #         dplyr::everything(),
+    #         as.numeric
+    #       )
+    #     )
+    # }
+    #
+    # ###############################
+}
 {
     #
     # if(stringr::str_detect(postData, pattern = "Attributes")){
@@ -869,22 +905,88 @@ playerScraper <-
     ### Combines and structures the scraped data into a data.frame
     ##  Commented parts are from the discontinued playerRatings scraper that is no longer used
     data <-
-      data.frame(
-        NAME,
+      tibble(
+        # NAME,
         # NICKNAME,
         CLASS,
-        POSITION,
+        # POSITION,
         TPE,
+        CREATED,
         LINK = player,
         USER,
         USERLINK,
         USERINFO,
-        USERDATA %>% t(),
+        USERDATA %>% t() %>% as_tibble(),
         #USEDTPE,
         PLAYERTEAM,
-        PLAYERINFO,
-        ATTRIBUTES
+        PLAYERINFO#,
+        # ATTRIBUTES
         #PLAYERRATINGS %>% t()
+      ) %>%
+      mutate(
+        NAME = paste(`First Name`, `Last Name`)
+      ) %>%
+      relocate(
+        NAME
+      ) %>%
+      relocate(
+        Position,
+        .after = CLASS
+      ) %>%
+      ## Create a "clean name" variable without special characters
+      ## This can be used in connection with the index data
+      mutate(
+        clean_name =
+          stringi::stri_trans_general(
+            NAME,
+            id = "Latin-ASCII"
+          ),
+        clean_name =
+          ## These players have too long names (or other names) in FHM6
+          dplyr::case_when(
+            clean_name == "James \"Jimmy\" Yzerman" ~ "James Yzerman",
+            clean_name == "Asclepius Perseus Flitterwind" ~ "Asclepius Perseus Flitter",
+            clean_name == "Hennesey-Gallchobhar O'McGuiness" ~ "Hennesey-Gallchobhar O'Mc",
+            clean_name == "Terrence \"Big Terry\" Smith" ~ "Terrence Smith",
+            clean_name == "Ragnar-Alexandre Ragnarsson-Tremblay" ~ "Ragnar-Alexandre Ragnarss",
+            TRUE ~ clean_name
+          ) %>%
+          ## Cleans up the transformation a bit
+          stringr::str_squish()
+      ) %>%
+      ## Uses standard names for positions
+      ## Transforms some variables to numeric
+      mutate(
+        Position =
+         case_when(
+           Position %in% c("G", "Goaltender") ~ "Goalie",
+           Position %in% c("C", "Centre") ~ "Center",
+           Position %in% c("D", "Defence", "Defenseman") ~ "Defense",
+           Position == "LW" ~ "Left Wing",
+           Position == "W" ~ "Winger",
+           Position %in% c("RHD", "Right Defence", "Right Defenseman", "Right Defender") ~ "Right Defense",
+           Position %in% c("LHD", "Left Defence", "Left Defenseman", "Left Defender") ~ "Left Defense",
+           Position %in% c("RW", "Right Winger") ~ "Right Wing",
+           TRUE ~ Position
+         ) %>%
+         factor(
+           levels =
+             c(
+               "Goalie",
+               "Defense",
+               "Left Defense",
+               "Right Defense",
+               "Left Wing",
+               "Center",
+               "Right Wing",
+               "Winger"
+             )
+        ),
+        NAME = stringr::str_remove(NAME, pattern = " \\*"),
+        Posts = as.numeric(stringr::str_remove_all(Posts, pattern = "[^0-9]")),
+        Threads = as.numeric(stringr::str_remove_all(Threads, pattern = "[^0-9]")),
+        Reputation = as.numeric(stringr::str_remove_all(Reputation, pattern = "[^0-9]")),
+        `Jersey Number` = as.numeric(stringr::str_remove_all(`Jersey Number`, pattern = "[^0-9]"))
       )
 
     return(data)

@@ -232,6 +232,11 @@ scraper <- function(parallell = FALSE){
           }
         }
       ) %>%
+      .[which(lapply(., is.data.frame) %>% unlist())] %>%
+      do.call(
+        args = .,
+        what = plyr::rbind.fill
+      ) %>%
       return()
   }
 
