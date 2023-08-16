@@ -998,12 +998,7 @@ playerScraper <-
         Reputation = as.numeric(stringr::str_remove_all(Reputation, pattern = "[^0-9]")),
         `Jersey Number` = as.numeric(stringr::str_remove_all(`Jersey Number`, pattern = "[^0-9]"))
       ) %>%
-      rename(
-        across(
-          everything(),
-          ~toupper(.x)
-        )
-      )
+      rename_with(toupper)
 
     return(data)
   }
