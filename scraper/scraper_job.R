@@ -87,12 +87,12 @@ forumData <-
   mutate(
     `IIHF NATION` =
       case_when(
-        is.na(`IIHF NATION.y`) ~ `IIHF NATION.x`,
-        TRUE ~ `IIHF NATION.y`
+        is.na(`IIHF Nation`) ~ `IIHF NATION`,
+        TRUE ~ `IIHF Nation`
       )
   ) %>%
   select(
-    -c(`IIHF NATION.x`, `IIHF NATION.y`)
+    -c(`IIHF Nation`)
   ) %>%
   left_join(
     draftedProspects,
