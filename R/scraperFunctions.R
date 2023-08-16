@@ -436,7 +436,7 @@ playerScraper <-
       stringr::str_split(pattern = "\\n", simplify = TRUE) %>%
       .[1:(stringr::str_detect(., pattern = "Professionalism") %>% which())] %>%
       .[stringr::str_detect(., pattern = ":")] %>%
-      stringr::str_split(pattern = ":(?!/)", simplify = TRUE) %>%
+      stringr::str_split(pattern = "(?<!:):(?!/)", simplify = TRUE, n = 2) %>%
       matrix(ncol = 2) %>%
       data.frame() %>%
       dplyr::mutate(
@@ -923,9 +923,19 @@ playerScraper <-
         # ATTRIBUTES
         #PLAYERRATINGS %>% t()
       ) %>%
-      mutate(
-        NAME = paste(`First Name`, `Last Name`)
-      ) %>%
+      {
+        if(all(c("First Name", "Last Name") %in% colnames(.))){
+          mutate(
+            .,
+            NAME = paste(`First Name`, `Last Name`)
+          )
+        } else {
+          rename(
+            .,
+            NAME = Name
+          )
+        }
+      } %>%
       relocate(
         NAME
       ) %>%
