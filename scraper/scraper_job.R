@@ -85,17 +85,14 @@ forumData <-
     by = c("NAME" = "player")
   ) %>%
   mutate(
-    IIHF.Nation =
+    `IIHF Nation` =
       case_when(
-        is.na(`IIHF Nation`) ~ IIHF.Nation,
-        TRUE ~ `IIHF Nation`
+        is.na(`IIHF Nation.y`) ~ `IIHF Nation.x`,
+        TRUE ~ `IIHF Nation.y`
       )
   ) %>%
   select(
-    -`IIHF Nation`
-  ) %>%
-  rename(
-    `IIHF Nation` = IIHF.Nation
+    -c(`IIHF Nation.x`, `IIHF Nation.y`)
   ) %>%
   left_join(
     draftedProspects,
