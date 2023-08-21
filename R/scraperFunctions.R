@@ -440,6 +440,7 @@ playerScraper <-
       matrix(ncol = 2) %>%
       data.frame() %>%
       dplyr::mutate(
+        X1 = stringr::str_squish(X1),
         X2 = stringr::str_squish(X2)
       ) %>%
       tidyr::pivot_wider(

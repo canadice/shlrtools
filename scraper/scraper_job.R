@@ -102,7 +102,31 @@ forumData <-
     SHL.Team =
       Rights
   ) %>%
-  select(-Rights)
+  select(-Rights) %>%
+  arrange(
+    CREATED
+  ) %>%
+  mutate(
+    HANDEDNESS =
+      coalesce(
+        HANDEDNESS, SHOOTS
+      ),
+    `SHL TEAM` =
+      coalesce(
+        `SHL TEAM`, SHL.Team
+      )
+  ) %>%
+  relocate(
+    BLOCKER:`GOALIE STAMINA`,
+    .before = `IIHF NATION`
+  ) %>%
+  relocate(
+    Original:`Transfer Season`,
+    .after = `IIHF NATION`
+  ) %>%
+  select(
+    NAME:CLEAN_NAME
+  )
 
 
 save(
