@@ -135,70 +135,70 @@ save(
 )
 
 write.csv(forumData, file = "data/forumData.csv", row.names = FALSE)
-#
-# forumData %>%
-#   dplyr::select(
-#     USERLINK,
-#     NAME,
-#     POSITION,
-#     Handedness,
-#     Recruited.By,
-#     Player.Render,
-#     Jersey.Nr.,
-#     Height,
-#     Weight,
-#     Birthplace,
-#     CLASS,
-#     league,
-#     fhmID,
-#     SHL.Team,
-#     IIHF.Nation,
-#     TPE,
-#     Screening:Goalie.Stamina
-#   ) %>%
-#   dplyr::rename(
-#     user = USERLINK,
-#     name = NAME,
-#     position = POSITION,
-#     handedness = Handedness,
-#     recruiter = Recruited.By,
-#     render = Player.Render,
-#     jerseyNumber = Jersey.Nr.,
-#     height = Height,
-#     weight = Weight,
-#     birthplace = Birthplace,
-#     season = CLASS,
-#     currentLeague = league,
-#     teamID = fhmID,
-#     shlRightsTeamID = SHL.Team,
-#     iihfNation = IIHF.Nation,
-#     tpeTotal = TPE
-#   ) %>%
-#   mutate(
-#     user = user %>% stringr::str_extract_all(pattern = "[0-9]+", simplify = TRUE),
-#     season = season %>% stringr::str_extract_all(pattern = "[0-9]+", simplify = TRUE)
-#   ) %>%
-#   left_join(
-#     teamInfo %>%
-#       dplyr::filter(
-#         league == "SHL"
-#       ) %>%
-#       dplyr::select(fhmID, team),
-#     by = c("shlRightsTeamID" = "team")
-#   ) %>%
-#   mutate(
-#     shlRightsTeamID = fhmID %>% as.character() %>% tidyr::replace_na(replace = ""),
-#     across(
-#       c(currentLeague, teamID, Screening:Goalie.Stamina),
-#       ~ .x %>%
-#         as.character() %>%
-#         tidyr::replace_na(replace = "")
-#     )
-#   ) %>%
-#   select(
-#     -fhmID
-#   ) %>%
-#   write.csv(file = "data/forumDataImport.csv", row.names = FALSE)
+
+forumData %>%
+  dplyr::select(
+    USERLINK,
+    NAME,
+    POSITION,
+    HANDEDNESS,
+    `RECRUITED BY`,
+    `PLAYER RENDER`,
+    `JERSEY NUMBER`,
+    HEIGHT,
+    WEIGHT,
+    BIRTHPLACE,
+    CLASS,
+    LEAGUE,
+    FHMID,
+    `SHL TEAM`,
+    `IIHF NATION`,
+    TPE,
+    SCREENING:`GOALIE STAMINA`
+  ) %>%
+  dplyr::rename(
+    user = USERLINK,
+    name = NAME,
+    position = POSITION,
+    handedness = HANDEDNESS,
+    recruiter = `RECRUITED BY`,
+    render = `PLAYER RENDER`,
+    jerseyNumber = `JERSEY NUMBER`,
+    height = HEIGHT,
+    weight = WEIGHT,
+    birthplace = BIRTHPLACE,
+    season = CLASS,
+    currentLeague = LEAGUE,
+    teamID = FHMID,
+    shlRightsTeamID = `SHL TEAM`,
+    iihfNation = `IIHF NATION`,
+    tpeTotal = TPE
+  ) %>%
+  mutate(
+    user = user %>% stringr::str_extract_all(pattern = "[0-9]+", simplify = TRUE),
+    season = season %>% stringr::str_extract_all(pattern = "[0-9]+", simplify = TRUE)
+  ) %>%
+  left_join(
+    teamInfo %>%
+      dplyr::filter(
+        league == "SHL"
+      ) %>%
+      dplyr::select(fhmID, team),
+    by = c("shlRightsTeamID" = "team")
+  ) %>%
+  mutate(
+    shlRightsTeamID = fhmID %>% as.character() %>% tidyr::replace_na(replace = ""),
+    across(
+      c(currentLeague, teamID, SCREENING:`GOALIE STAMINA`),
+      ~ .x %>%
+        as.character() %>%
+        tidyr::replace_na(replace = "")
+    )
+  ) %>%
+  select(
+    -fhmID
+  ) %>%
+  write.csv(file = "data/forumDataImport.csv", row.names = FALSE)
 
 
 
