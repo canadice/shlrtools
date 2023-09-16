@@ -58,7 +58,7 @@ jobs:
 
       - name: Run the scraper
         run: |
-          source("scraper/scraper_job.R")
+          source("scraper/scraperJobWithAPI.R")
         shell: Rscript {0}
 
       - name: Commit the results of the scraper

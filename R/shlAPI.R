@@ -1,6 +1,6 @@
-#' Calls the SHL Index API
+#' Calls the an SHL API
 #'
-#' @param url The url to the SHL API.
+#' @param url The url to the SHL API either the Index or the Portal
 #' @param ... Additional queries for the API call.
 #' @return A data frame of the data.
 #' @export
@@ -276,4 +276,36 @@ standingsLoader <- function(leagueID, season = NULL){
     )
 
   return(standings)
+}
+
+
+#' Loads player data from the SHL Portal
+#'
+#'
+#'
+
+portalPlayers <- function(){
+
+  url <- "https://portal.simulationhockey.com/api/v1/player"
+
+  data <- readAPI(url) %>%
+    mutate(
+      USERLINK = paste("https://simulationhockey.com/member.php?action=profile&uid=", uid, sep = ""),
+      LINK = paste("https://portal.simulationhockey.com/player/", pid, sep = ""),
+      CLASS = paste("S", draftSeason, sep = ""),
+      `SHL TEAM` =
+        case_when(
+          currentLeague == "SHL" ~ currentTeamID,
+          TRUE ~ shlRightsTeamID
+        ),
+
+    ) %>%
+    left_join(
+      teamInfo %>%
+        filter(
+          !(is.na(fhmID))
+        ),
+      by = c("currentLeague" = "league", "currentTeamID" = "fhmID")
+    ) %>%
+    return()
 }

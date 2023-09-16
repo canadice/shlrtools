@@ -1020,7 +1020,7 @@ userScraper <- function(link){
   topic <- xml2::read_html(link)
 
   ### Searches for the date of the user's last post
-  lastPost <-
+  allPosts <-
     topic %>%
 
     ## Finds link to all posts
@@ -1030,10 +1030,10 @@ userScraper <- function(link){
     # dplyr::nth(2) %>%
     rvest::html_attr("href")
 
-  if(lastPost == "#"){
+  if(allPosts == "#"){
     topic <- xml2::read_html(link)
 
-    lastPost <-
+    allPosts <-
       topic %>%
 
       ## Finds link to all posts
@@ -1047,7 +1047,7 @@ userScraper <- function(link){
   lastPost <-
     paste(
       base_link,
-      lastPost,
+      allPosts,
       sep = ""
     ) %>%
 
@@ -1233,8 +1233,14 @@ userScraper <- function(link){
             second + 60 * (minute + 60 * (hour + 24 * (day + 7 * (week + 4.345 * (month + 12*year)))))
           }
         )
-    ) %>%
+    )
 
+  if(nrow(lastPost) == 0){
+    lastPost <- table$Joined
+  }
+
+  table <-
+    table %>%
     ## Checks if a user is considered IA (30 days of not posting)
     dplyr::mutate(
       # `Last Post` = lastPost %>% unlist() %>% lubridate::as_date(),
@@ -1267,7 +1273,8 @@ userScraper <- function(link){
           simplify = TRUE
         ) %>%
         paste0(collapse = "") %>%
-        as.numeric()
+        as.numeric(),
+      USERLINK = link
     )
 
   return(table)
