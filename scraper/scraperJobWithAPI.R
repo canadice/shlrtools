@@ -1,16 +1,6 @@
 require(shlrtools)
 require(dplyr)
 
-### Loading data sets
-## Current forum scrape data from Google Sheets that is automatically written every day
-googlesheets4::gs4_deauth()
-
-iihfTransfer <-
-  googlesheets4::read_sheet(
-    ss = "https://docs.google.com/spreadsheets/d/1shZphSBULx7G8hYDtoUqTW6gy445_DDA6NIHqFrayLs/edit#gid=0",
-    sheet = "Transfers"
-  )
-
 ## Grabs data from the Portal API
 data <-
   portalPlayers()

@@ -40,9 +40,9 @@ usethis::use_data(attKey, internal = FALSE, overwrite = TRUE)
 ##---------------------------------------------------------------
 ##                        Historical Data                       -
 ##---------------------------------------------------------------
-
-historySkaterSeason <- read.csv2(paste(raw, "csv/history_skaters.csv", sep = ""), sep = ",") %>%
-  mutate(leagueID = leagueID - 1)
+#
+# historySkaterSeason <- read.csv2(paste(raw, "csv/history_skaters.csv", sep = ""), sep = ",") %>%
+#   mutate(leagueID = leagueID - 1)
 
 # leagueId <- 1
 # season <- 53
@@ -103,6 +103,12 @@ historyUpdate <- function(leagueId, season){
           abbr
         ),
       by = c("team" = "abbr", "league" = "leagueID")
+    ) %>%
+
+    ### Removes duplicated rows where the team abbreviation has been used for older teams
+    group_by(name, type) %>%
+    filter(
+      newTeamID == max(newTeamID)
     ) %>%
     select(
       franchiseID,

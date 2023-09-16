@@ -4,7 +4,7 @@
 \alias{gamesLoader}
 \title{Loads schedule from the Index}
 \usage{
-gamesLoader(leagueID, season = NULL, type = NULL)
+gamesLoader(leagueID, season = NULL, type = "regular")
 }
 \arguments{
 \item{leagueID}{ID of the league to get attributes from, SHL = 0, SMJHL = 1, IIHF = 2, WJC = 3}

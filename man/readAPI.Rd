@@ -2,12 +2,12 @@
 % Please edit documentation in R/shlAPI.R
 \name{readAPI}
 \alias{readAPI}
-\title{Calls the SHL Index API}
+\title{Calls the an SHL API}
 \usage{
 readAPI(url, ...)
 }
 \arguments{
-\item{url}{The url to the SHL API.}
+\item{url}{The url to the SHL API either the Index or the Portal}
 
 \item{...}{Additional queries for the API call.}
 }
@@ -15,7 +15,7 @@ readAPI(url, ...)
 A data frame of the data.
 }
 \description{
-Calls the SHL Index API
+Calls the an SHL API
 }
 \examples{
 readAPI(

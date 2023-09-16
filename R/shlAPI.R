@@ -281,8 +281,10 @@ standingsLoader <- function(leagueID, season = NULL){
 
 #' Loads player data from the SHL Portal
 #'
+#' @returns
+#' Returns a data.frame with the information
 #'
-#'
+#' @export
 
 portalPlayers <- function(){
 
