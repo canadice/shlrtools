@@ -79,7 +79,8 @@ forumData <-
     WEIGHT = weight,
     BIRTHPLACE = birthplace,
     `TPE AVAILABLE` = bankedTPE,
-    franchiseID:alt2
+    franchiseID:alt2,
+    RENDER = render
   ) %>%
   left_join(
     attributes,
@@ -94,6 +95,10 @@ forumData <-
   ) %>%
   arrange(
     CREATED
+  ) %>%
+  relocate(
+    RENDER,
+    .after = CLEAN_NAME
   )
 
 save(
