@@ -311,3 +311,48 @@ portalPlayers <- function(){
     ) %>%
     return()
 }
+
+
+#' Reads and summarizes player earnings in a season from the SHL Portal
+#'
+#' @returns A data frame of earnings from the past seasons
+#'
+#' @export
+#'
+tpeEarnings <- function(pid) {
+  url <- "https://portal.simulationhockey.com/api/v1/tpeevents"
+
+  seasonTurnover <-
+    c(
+      "72" = "2023-09-10",
+      "73" = "2023-09-18",
+      "74" = "2023-11-13",
+      "75" = "2024-01-15"
+    )
+
+  readAPI(
+    url = url,
+    query = list(pid = pid)
+  ) %>%
+    mutate(
+      season =
+          names(seasonTurnover[
+            sapply(seasonTurnover, function(x) (submissionDate > x) %>% as.numeric(), simplify = TRUE) %>%
+            rowSums()
+          ])
+    ) %>%
+    group_by(
+      pid,
+      season,
+      taskType
+    ) %>%
+    summarize(
+      earnedTPE = sum(TPEChange)
+    ) %>%
+    tidyr::pivot_wider(
+      names_from = c(season, taskType),
+      names_sep = "_",
+      values_from = earnedTPE
+    )
+
+}
