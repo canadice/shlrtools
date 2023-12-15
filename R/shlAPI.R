@@ -324,11 +324,15 @@ tpeEarnings <- function(pid) {
 
   seasonTurnover <-
     c(
-      "72" = "2023-09-10",
+      "72" = "2023-07-10",
       "73" = "2023-09-18",
       "74" = "2023-11-13",
       "75" = "2024-01-15"
-    )
+    ) %>%
+    lubridate::as_datetime() + lubridate::hours(7) + lubridate::seconds(30)
+
+  names(seasonTurnover) <-
+    72:(72+length(seasonTurnover)-1)
 
   readAPI(
     url = url,
@@ -337,7 +341,7 @@ tpeEarnings <- function(pid) {
     mutate(
       season =
           names(seasonTurnover[
-            sapply(seasonTurnover, function(x) (submissionDate > x) %>% as.numeric(), simplify = TRUE) %>%
+            sapply(seasonTurnover, function(x) (submissionDate %>% lubridate::as_datetime() > x) %>% as.numeric(), simplify = TRUE) %>%
             rowSums()
           ])
     ) %>%
