@@ -303,7 +303,9 @@ portalPlayers <- function(){
 
     ) %>%
     ## Adding filtering to account for players that are retired
-    filter(status == "active") %>%
+    ## Currently checks S73 trade deadline
+    ## S74 deadline is 2023-12-23
+    filter(!(retirementDate < "2023-10-21")) %>%
     left_join(
       teamInfo %>%
         filter(
