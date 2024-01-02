@@ -290,6 +290,11 @@ portalPlayers <- function(){
 
   url <- "https://portal.simulationhockey.com/api/v1/player"
 
+  seasonCutoff <-
+    "https://portal.simulationhockey.com/api/v1/season" %>%
+    readAPI() %>%
+    .$startDate
+
   data <- readAPI(url) %>%
     mutate(
       USERLINK = paste("https://simulationhockey.com/member.php?action=profile&uid=", uid, sep = ""),
@@ -303,9 +308,7 @@ portalPlayers <- function(){
 
     ) %>%
     ## Adding filtering to account for players that are retired
-    ## Currently checks S73 trade deadline
-    ## S74 deadline is 2023-12-23
-    filter(!(retirementDate < "2023-10-21")) %>%
+    filter(!(retirementDate < seasonCutoff) | status == "active") %>%
     left_join(
       teamInfo %>%
         filter(
