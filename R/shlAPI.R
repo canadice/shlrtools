@@ -302,6 +302,8 @@ portalPlayers <- function(){
         ),
 
     ) %>%
+    ## Adding filtering to account for players that are retired
+    filter(status == "active") %>%
     left_join(
       teamInfo %>%
         filter(
