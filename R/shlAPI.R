@@ -350,12 +350,21 @@ tpeEarnings <- function(pid) {
           names(seasonTurnover[
             sapply(seasonTurnover, function(x) (submissionDate %>% lubridate::as_datetime() > x) %>% as.numeric(), simplify = TRUE) %>%
             rowSums()
-          ])
+          ]),
+      activeStatus =
+        if_else(
+          any(
+            submissionDate %>% lubridate::as_datetime() > (lubridate::now() - lubridate::days(21))
+          ),
+          1,
+          0
+        )
     ) %>%
     group_by(
       pid,
       season,
-      taskType
+      taskType,
+      activeStatus
     ) %>%
     summarize(
       earnedTPE = sum(TPEChange)
@@ -364,6 +373,7 @@ tpeEarnings <- function(pid) {
       names_from = c(season, taskType),
       names_sep = "_",
       values_from = earnedTPE
-    )
+    ) %>%
+    ungroup()
 
 }

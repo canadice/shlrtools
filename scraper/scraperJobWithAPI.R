@@ -131,6 +131,12 @@ forumData <-
   left_join(
     tpeData,
     by = "pid"
+  ) %>%
+  mutate(
+    ACTIVE = if_else(ACTIVE == "Active" | activeStatus == 1, "Active", "IA")
+  ) %>%
+  select(
+    !activeStatus
   )
 
 save(
