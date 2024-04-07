@@ -1,29 +1,29 @@
-raw <- "https://raw.githubusercontent.com/canadice/shl/main/"
-
 require(shlrtools)
 require(dplyr)
+require(dbplyr)
+require(DBI)
+require(RSQLite)
+
+## Downloads a local file for the database
+dbFile <- tempfile(fileext = ".db")
+
+dbUrl <- ("https://github.com/canadice/shl/blob/main/database/SHL_Database.db?raw=true")
+
+download.file(dbUrl, destfile = dbFile, mode = "wb")
+
+con <-
+  dbConnect(
+    SQLite(),
+    dbFile
+  )
 
 ##----------------------------------------------------------------
 ##                Team information and color codes               -
 ##----------------------------------------------------------------
 
 teamInfo <-
-  read.csv2(
-    paste(
-    raw,
-    "csv/team_information.csv",
-    sep = "")
-  ) %>%
-  mutate(
-    abbr =
-      case_when(
-        abbr == "CZE" ~ "CZH",
-        abbr == "JAP" ~ "JPN",
-        abbr == "LAT" ~ "LTV",
-        abbr == "NOLA" ~ "NOL",
-        TRUE ~ abbr
-      )
-  )
+  tbl(con, "teamInfo") %>%
+  collect()
 
 usethis::use_data(teamInfo, internal = FALSE, overwrite = TRUE)
 
