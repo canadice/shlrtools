@@ -108,7 +108,8 @@ forumData <-
     BIRTHPLACE = birthplace,
     `TPE AVAILABLE` = bankedTPE,
     franchiseID:alt2,
-    RENDER = render
+    RENDER = render,
+    RECRUITER = recruiter
   ) %>%
   left_join(
     attributes,
@@ -125,7 +126,7 @@ forumData <-
     CREATED
   ) %>%
   relocate(
-    RENDER,
+    c(RENDER, RECRUITER),
     .after = CLEAN_NAME
   ) %>%
   left_join(
