@@ -102,7 +102,7 @@ forumData <-
     .after = CLEAN_NAME
   ) %>%
   mutate(
-    ACTIVE = if_else(ACTIVE == "Active" | activeStatus == 1, "Active", "IA")
+    ACTIVE = if_else(ACTIVE == "Active", "Active", "IA")
   ) %>%
   select(
     !activeStatus
