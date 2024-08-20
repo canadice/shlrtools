@@ -2,8 +2,13 @@
 % Please edit documentation in R/packageDescription.R
 \docType{package}
 \name{shlrtools}
+\alias{shlrtools-package}
 \alias{shlrtools}
 \title{\code{shlrtools} package}
 \description{
 R tools and functions for the SHL
+}
+\author{
+\strong{Maintainer}: Canadice SHL \email{canadice.shl@gmail.com}
+
 }
