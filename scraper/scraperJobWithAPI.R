@@ -103,9 +103,6 @@ forumData <-
   ) %>%
   mutate(
     ACTIVE = if_else(ACTIVE == "Active", "Active", "IA")
-  ) %>%
-  select(
-    !activeStatus
   )
 
 save(
