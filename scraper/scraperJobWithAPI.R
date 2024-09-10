@@ -3,7 +3,7 @@ require(dplyr)
 
 ## Grabs data from the Portal API
 data <-
-  portalPlayers()[1:10,]
+  portalPlayers()
 
 ## Scrapes data from the forum for usernames
 userData <-
