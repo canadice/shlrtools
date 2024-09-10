@@ -320,3 +320,32 @@ portalPlayers <- function(){
 }
 
 
+#' Reads and summarizes player earnings in a season from the SHL Portal
+#'
+#' @returns A data frame of earnings from the past seasons
+#'
+#' @export
+#'
+tpeEarnings <- function(pid) {
+  url <- "https://portal.simulationhockey.com/api/v1/tpeevents"
+
+  readAPI(
+    url = url,
+    query = list(pid = pid)
+  ) %>%
+  mutate(
+    activeStatus =
+    if_else(
+      any(
+        submissionDate %>% lubridate::as_datetime() > (lubridate::now() - lubridate::days(21))
+      ),
+      1,
+      0
+    )
+  ) %>%
+    select(pid, activeStatus) %>%
+    unique()
+
+}
+
+

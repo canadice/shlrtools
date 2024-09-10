@@ -3,7 +3,7 @@ require(dplyr)
 
 ## Grabs data from the Portal API
 data <-
-  portalPlayers()
+  portalPlayers()[1:10,]
 
 ## Scrapes data from the forum for usernames
 userData <-
@@ -27,6 +27,33 @@ userData <-
       return(scrape)
     }
   }
+  ) %>%
+  .[which(lapply(., is.data.frame) %>% unlist())] %>%
+  do.call(
+    args = .,
+    what = plyr::rbind.fill
+  )
+
+tpeData <-
+  data$pid %>%
+  unique() %>%
+  lapply(
+    X = .,
+    FUN = function(x){
+      scrape <-
+      tryCatch(
+        tpeEarnings(x), error = function(e) paste(x, "produces this error: ", e)
+      )
+      if(
+        !is.data.frame(scrape)
+      ){
+        print(x)
+      }
+      else {
+        # print("OK")
+        return(scrape)
+      }
+    }
   ) %>%
   .[which(lapply(., is.data.frame) %>% unlist())] %>%
   do.call(
@@ -101,9 +128,14 @@ forumData <-
     c(RENDER, RECRUITER),
     .after = CLEAN_NAME
   ) %>%
+  left_join(
+    tpeData,
+    by = "pid"
+  ) %>%
   mutate(
-    ACTIVE = if_else(ACTIVE == "Active", "Active", "IA")
-  )
+    ACTIVE = if_else(ACTIVE == "Active" | activeStatus == 1, "Active", "IA")
+  ) %>%
+  select(!activeStatus)
 
 save(
   forumData,
