@@ -35,14 +35,16 @@ userData <-
   )
 
 tpeData <-
-  data$pid %>%
+  data %>%
+  select(uid, pid) %>%
   unique() %>%
-  lapply(
+  apply(
     X = .,
+    MARGIN = 1,
     FUN = function(x){
       scrape <-
       tryCatch(
-        tpeEarnings(x), error = function(e) paste(x, "produces this error: ", e)
+        tpeEarnings(x["uid"], x["pid"]), error = function(e) paste(x, "produces this error: ", e)
       )
       if(
         !is.data.frame(scrape)

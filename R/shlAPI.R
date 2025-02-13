@@ -326,25 +326,35 @@ portalPlayers <- function(){
 #'
 #' @export
 #'
-tpeEarnings <- function(pid) {
+tpeEarnings <- function(uid, pid) {
   url <- "https://portal.simulationhockey.com/api/v1/tpeevents"
 
-  readAPI(
-    url = url,
-    query = list(pid = pid)
-  ) %>%
-  mutate(
-    activeStatus =
-    if_else(
-      any(
-        submissionDate %>% lubridate::as_datetime() > (lubridate::now() - lubridate::days(21))
-      ),
-      1,
-      0
-    )
-  ) %>%
-    select(pid, activeStatus) %>%
-    unique()
+  result <-
+    readAPI(
+      url = url,
+      query = list(pid = pid)
+    ) %>%
+    filter(submittedByID == uid) %>%
+    mutate(
+      activeStatus =
+      if_else(
+        any(
+          submissionDate %>% lubridate::as_datetime() > (lubridate::now() - lubridate::days(21))
+        ),
+        1,
+        0
+      )
+    ) %>%
+      select(pid, activeStatus) %>%
+      unique()
+
+  if(nrow(result) == 0){
+    return(data.frame(pid = pid, activeStatus = 0))
+  } else {
+    return(result)
+  }
+
+
 
 }
 
