@@ -296,9 +296,7 @@ portalPlayers <- function(){
   url <- "https://portal.simulationhockey.com/api/v1/player"
 
   seasonCutoff <-
-    "https://portal.simulationhockey.com/api/v1/season" %>%
-    readAPI() %>%
-    .$startDate
+    readAPI("https://portal.simulationhockey.com/api/v1/season")$startDate
 
   data <- readAPI(url) %>%
     mutate(
