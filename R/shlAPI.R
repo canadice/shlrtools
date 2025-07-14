@@ -25,7 +25,7 @@ readAPI <- function(url, ...){
       return()
   },
   error = function(e){
-    simpleError(message = paste0(url, e, collapse = "\n"))
+    print(paste(url, e, sep = " ||| "))
   })
 }
 
