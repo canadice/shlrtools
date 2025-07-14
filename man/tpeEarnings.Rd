@@ -4,7 +4,7 @@
 \alias{tpeEarnings}
 \title{Reads and summarizes player earnings in a season from the SHL Portal}
 \usage{
-tpeEarnings(pid)
+tpeEarnings(uid, pid)
 }
 \value{
 A data frame of earnings from the past seasons

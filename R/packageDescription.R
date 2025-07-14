@@ -3,7 +3,7 @@
 #' R tools and functions for the SHL
 #'
 #'
-#' @docType package
+#' @docType _PACKAGE
 #' @name shlrtools
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data
