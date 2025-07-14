@@ -11,17 +11,22 @@
 #' )
 
 readAPI <- function(url, ...){
-  temp <-
-    url %>%
-    # Gets the API information, the ... allows for specific queries with query = list()
-    httr::GET(...)
+  tryCatch({
+    temp <-
+      url %>%
+      # Gets the API information, the ... allows for specific queries with query = list()
+      httr::GET(...)
 
-  temp$content %>%
-    # Extracts the data
-    rawToChar() %>%
-    # Converts it from JSON to a data frame
-    jsonlite::fromJSON() %>%
-    return()
+    temp$content %>%
+      # Extracts the data
+      rawToChar() %>%
+      # Converts it from JSON to a data frame
+      jsonlite::fromJSON() %>%
+      return()
+  },
+  error = function(e){
+    simpleError(message = paste0(url, e, collapse = "\n"))
+  })
 }
 
 #' Loading the player attributes
